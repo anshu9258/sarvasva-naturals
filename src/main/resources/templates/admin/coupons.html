@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Coupons | Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Sarvasva Naturals<br><span style="font-size:11px;color:var(--sage-lt);">Admin Panel</span></div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-box-open"></i> Products</a>
+      <a href="/admin/categories"><i class="fas fa-tags"></i> Categories</a>
+      <a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+      <a href="/admin/coupons" class="active"><i class="fas fa-percent"></i> Coupons</a>
+      <a href="/admin/reviews"><i class="fas fa-star"></i> Reviews</a>
+      <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);margin:16px 0;"></div>
+      <a href="/"><i class="fas fa-home"></i> View Store</a>
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header"><h1>Coupon Codes</h1></div>
+    <div th:if="${success}" style="background:#e8f5e9;border-radius:8px;padding:12px 16px;color:#1b5e20;margin-bottom:20px;"><i class="fas fa-check-circle"></i> <span th:text="${success}"></span></div>
+
+    <div style="display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:start;">
+      <!-- Create Coupon -->
+      <div style="background:white;border-radius:12px;padding:28px;box-shadow:var(--shadow-sm);">
+        <h3 style="font-family:var(--font-display);font-size:18px;color:var(--forest);margin-bottom:20px;">Create Coupon</h3>
+        <form action="/admin/coupons/save" method="post">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <div class="form-group"><label class="form-label">Coupon Code *</label><input type="text" name="code" class="form-control" required placeholder="e.g. SAVE20" style="text-transform:uppercase;"></div>
+          <div class="form-group"><label class="form-label">Description</label><input type="text" name="description" class="form-control" placeholder="e.g. 20% off on first order"></div>
+          <div class="form-group">
+            <label class="form-label">Type *</label>
+            <select name="type" class="form-control">
+              <option value="PERCENTAGE">Percentage (%)</option>
+              <option value="FIXED_AMOUNT">Fixed Amount (₹)</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Discount Value *</label><input type="number" name="discountValue" class="form-control" required step="0.01" placeholder="e.g. 20 for 20% or ₹100"></div>
+          <div class="form-group"><label class="form-label">Minimum Order (₹)</label><input type="number" name="minimumOrderAmount" class="form-control" step="0.01" placeholder="e.g. 500"></div>
+          <div class="form-group"><label class="form-label">Max Discount (₹) — for % coupons</label><input type="number" name="maximumDiscountAmount" class="form-control" step="0.01" placeholder="e.g. 200"></div>
+          <div class="form-group"><label class="form-label">Usage Limit</label><input type="number" name="usageLimit" class="form-control" placeholder="Leave blank for unlimited"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="form-group"><label class="form-label">Valid From</label><input type="date" name="validFrom" class="form-control"></div>
+            <div class="form-group"><label class="form-label">Valid Until</label><input type="date" name="validUntil" class="form-control"></div>
+          </div>
+          <label style="display:flex;align-items:center;gap:10px;margin-bottom:20px;cursor:pointer;">
+            <input type="checkbox" name="active" checked style="accent-color:var(--forest);width:18px;height:18px;">
+            <span style="font-weight:500;">Active (usable immediately)</span>
+          </label>
+          <button type="submit" class="btn-forest" style="width:100%;justify-content:center;"><i class="fas fa-plus"></i> Create Coupon</button>
+        </form>
+      </div>
+
+      <!-- Coupons Table -->
+      <div class="data-table">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:600;color:var(--forest);">All Coupons</div>
+        <table>
+          <thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Order</th><th>Used</th><th>Valid Until</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr th:each="c : ${coupons}">
+              <td><strong th:text="${c.code}" style="letter-spacing:1px;font-family:monospace;font-size:14px;"></strong></td>
+              <td th:text="${c.type}"></td>
+              <td>
+                <span th:if="${c.type.name() == 'PERCENTAGE'}" th:text="${c.discountValue} + '%'"></span>
+                <span th:if="${c.type.name() == 'FIXED_AMOUNT'}" th:text="'₹' + ${c.discountValue}"></span>
+              </td>
+              <td th:text="${c.minimumOrderAmount != null} ? '₹' + ${c.minimumOrderAmount} : '—'"></td>
+              <td th:text="${c.usedCount} + (c.usageLimit != null ? '/' + c.usageLimit : '')"></td>
+              <td style="font-size:13px;" th:text="${c.validUntil != null} ? ${c.validUntil} : 'No expiry'"></td>
+              <td>
+                <span th:if="${c.active}" style="background:#e8f5e9;color:#1b5e20;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">ACTIVE</span>
+                <span th:unless="${c.active}" style="background:#ffebee;color:#c62828;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">INACTIVE</span>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(coupons)}">
+              <td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted);">No coupons created yet</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Orders | Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Sarvasva Naturals<br><span style="font-size:11px;color:var(--sage-lt);font-family:var(--font-body);">Admin Panel</span></div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-box-open"></i> Products</a>
+      <a href="/admin/categories"><i class="fas fa-tags"></i> Categories</a>
+      <a href="/admin/orders" class="active"><i class="fas fa-shopping-cart"></i> Orders</a>
+      <a href="/admin/coupons"><i class="fas fa-percent"></i> Coupons</a>
+      <a href="/admin/reviews"><i class="fas fa-star"></i> Reviews</a>
+      <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);margin:16px 0;"></div>
+      <a href="/"><i class="fas fa-home"></i> View Store</a>
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Orders</h1>
+      <!-- Status filter -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a th:each="s : ${statuses}"
+           th:href="@{/admin/orders(status=${s.name()})}"
+           th:text="${s.name()}"
+           th:class="${currentStatus==s.name()}?'btn-sm edit':'btn-sm view'"></a>
+        <a href="/admin/orders" th:class="${currentStatus==null}?'btn-sm edit':'btn-sm view'">ALL</a>
+      </div>
+    </div>
+
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Order #</th><th>Customer</th><th>Items</th><th>Total</th>
+            <th>Payment</th><th>Status</th><th>Date</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="order : ${orders.content}">
+            <td style="font-weight:600;" th:text="${order.orderNumber}"></td>
+            <td>
+              <div th:text="${order.shippingName}"></div>
+              <div style="font-size:12px;color:var(--text-muted);" th:text="${order.user?.email}"></div>
+            </td>
+            <td th:text="${order.items.size()} + ' items'"></td>
+            <td style="font-weight:600;" th:text="'₹'+${order.totalAmount}"></td>
+            <td>
+              <span class="status-chip"
+                    th:classappend="${order.paymentStatus.name()=='PAID'}?'status-confirmed':'status-pending'"
+                    th:text="${order.paymentStatus}"></span>
+            </td>
+            <td>
+              <span class="status-chip"
+                    th:classappend="'status-'+${order.status.name().toLowerCase()}"
+                    th:text="${order.status}"></span>
+            </td>
+            <td style="font-size:13px;color:var(--text-muted);"
+                th:text="${#temporals.format(order.createdAt,'MMM dd, HH:mm')}"></td>
+            <td><a th:href="@{/admin/orders/{id}(id=${order.id})}" class="btn-sm view">Manage</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination" th:if="${orders.totalPages > 1}" style="padding:20px;">
+        <a th:each="i : ${#numbers.sequence(0,orders.totalPages-1)}"
+           th:href="@{/admin/orders(page=${i},status=${currentStatus})}"
+           class="page-btn" th:classappend="${i==orders.number}?'active'" th:text="${i+1}"></a>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

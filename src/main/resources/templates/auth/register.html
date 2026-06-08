@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Create Account | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="auth-page">
+  <div class="auth-visual">
+    <div class="auth-visual-logo">Sarvasva Naturals</div>
+    <div class="auth-visual-tagline">Join the Purity Movement</div>
+    <div class="auth-visual-facts">
+      <div class="auth-fact"><div class="auth-fact-icon"><i class="fas fa-box"></i></div>Track every order in real-time</div>
+      <div class="auth-fact"><div class="auth-fact-icon"><i class="fas fa-qrcode"></i></div>Access batch lab reports instantly</div>
+      <div class="auth-fact"><div class="auth-fact-icon"><i class="fas fa-tag"></i></div>Exclusive member discounts</div>
+    </div>
+  </div>
+  <div class="auth-form-side">
+    <div class="auth-form-box">
+      <h2>Create account</h2>
+      <p>Start your purity journey with Sarvasva Naturals</p>
+
+      <div th:if="${error}" style="background:#ffebee;border-radius:8px;padding:12px 16px;color:#c62828;font-size:14px;margin-bottom:20px;">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+      </div>
+      <div th:if="${success}" style="background:#e8f5e9;border-radius:8px;padding:12px 16px;color:#1b5e20;font-size:14px;margin-bottom:20px;">
+        <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+      </div>
+
+      <form method="post" action="/register" id="regForm">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" name="firstName" class="form-control" placeholder="Arjun" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" name="lastName" class="form-control" placeholder="Sharma" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone (optional)</label>
+          <input type="tel" name="phone" class="form-control" placeholder="+91 98687 26202">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div style="position:relative;">
+            <input type="password" name="password" id="regPwd" class="form-control" placeholder="Min. 8 characters" required minlength="8" style="padding-right:44px;">
+            <button type="button" onclick="togglePwd('regPwd',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div id="pwdStrength" style="height:4px;border-radius:4px;margin-top:8px;background:var(--border);overflow:hidden;"><div id="pwdBar" style="height:100%;width:0;transition:all 0.3s;border-radius:4px;"></div></div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;">
+          <input type="checkbox" id="terms" required style="margin-top:3px;accent-color:var(--forest);">
+          <label for="terms" style="font-size:13px;color:var(--text-muted);line-height:1.5;">I agree to the <a href="#" style="color:var(--forest);">Terms of Service</a> and <a href="#" style="color:var(--forest);">Privacy Policy</a></label>
+        </div>
+        <button type="submit" class="btn-forest" style="width:100%;justify-content:center;">
+          Create Account <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+      <div class="auth-link">Already have an account? <a href="/login">Sign in</a></div>
+    </div>
+  </div>
+</div>
+<script>
+function togglePwd(id, btn) {
+  const input = document.getElementById(id);
+  if (input.type === 'password') { input.type = 'text'; btn.innerHTML = '<i class="fas fa-eye-slash"></i>'; }
+  else { input.type = 'password'; btn.innerHTML = '<i class="fas fa-eye"></i>'; }
+}
+// Password strength
+document.getElementById('regPwd').addEventListener('input', function() {
+  const v = this.value, bar = document.getElementById('pwdBar');
+  let strength = 0;
+  if (v.length >= 8) strength++;
+  if (/[A-Z]/.test(v)) strength++;
+  if (/[0-9]/.test(v)) strength++;
+  if (/[^A-Za-z0-9]/.test(v)) strength++;
+  const colors = ['','#ef5350','#ff9800','#4caf50','#1b5e20'];
+  const widths = ['0%','25%','50%','75%','100%'];
+  bar.style.width = widths[strength];
+  bar.style.background = colors[strength];
+});
+</script>
+</body>
+</html>

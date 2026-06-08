@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Login | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="auth-page">
+  <div class="auth-visual">
+    <div class="auth-visual-logo">Sarvasva Naturals</div>
+    <div class="auth-visual-tagline">Purity in Every Grain</div>
+    <div class="auth-visual-facts">
+      <div class="auth-fact"><div class="auth-fact-icon"><i class="fas fa-flask"></i></div>HPLC verified every batch</div>
+      <div class="auth-fact"><div class="auth-fact-icon"><i class="fas fa-seedling"></i></div>Direct from heritage farms</div>
+      <div class="auth-fact"><div class="auth-fact-icon"><i class="fas fa-shield-alt"></i></div>Zero contaminants guaranteed</div>
+    </div>
+  </div>
+  <div class="auth-form-side">
+    <div class="auth-form-box">
+      <h2>Welcome back</h2>
+      <p>Sign in to your Sarvasva Naturals account</p>
+
+      <div th:if="${error}" style="background:#ffebee;border-radius:8px;padding:12px 16px;color:#c62828;font-size:14px;margin-bottom:20px;">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+      </div>
+      <div th:if="${message}" style="background:#e8f5e9;border-radius:8px;padding:12px 16px;color:#1b5e20;font-size:14px;margin-bottom:20px;">
+        <i class="fas fa-check-circle"></i> <span th:text="${message}"></span>
+      </div>
+
+      <form method="post" action="/login">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" name="username" class="form-control" placeholder="you@example.com" required autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="display:flex;justify-content:space-between;">
+            Password <a href="/forgot-password" style="color:var(--forest);font-weight:500;font-size:13px;">Forgot password?</a>
+          </label>
+          <div style="position:relative;">
+            <input type="password" name="password" id="loginPwd" class="form-control" placeholder="••••••••" required style="padding-right:44px;">
+            <button type="button" onclick="togglePwd('loginPwd',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;">
+          <input type="checkbox" name="remember-me" id="rememberMe" style="accent-color:var(--forest);">
+          <label for="rememberMe" style="font-size:14px;color:var(--text-muted);">Keep me signed in for 30 days</label>
+        </div>
+        <button type="submit" class="btn-forest" style="width:100%;justify-content:center;">
+          Sign In <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+      <div class="auth-link">Don't have an account? <a href="/register">Create one free</a></div>
+      <div style="margin-top:24px;text-align:center;">
+        <a href="/" style="font-size:13px;color:var(--text-muted);"><i class="fas fa-arrow-left"></i> Back to home</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function togglePwd(id, btn) {
+  const input = document.getElementById(id);
+  if (input.type === 'password') { input.type = 'text'; btn.innerHTML = '<i class="fas fa-eye-slash"></i>'; }
+  else { input.type = 'password'; btn.innerHTML = '<i class="fas fa-eye"></i>'; }
+}
+</script>
+</body>
+</html>

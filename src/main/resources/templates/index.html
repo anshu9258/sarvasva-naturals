@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sarvasva Naturals – Rooted in Ayurveda. Made for Wellness.</title>
+  <meta name="description" content="Premium Ayurvedic spices backed by laboratory science. HPLC verified, farm direct, zero toxins. Shop turmeric, pepper, cumin and more."/>
+  <meta name="keywords" content="ayurvedic spices, organic turmeric, HPLC verified spices, farm direct, sarvasva naturals, curcumin turmeric, black pepper malabar"/>
+  <meta name="author" content="Sarvasva Naturals"/>
+  <meta property="og:title" content="Sarvasva Naturals – Rooted in Ayurveda. Made for Wellness."/>
+  <meta property="og:description" content="Premium Ayurvedic spices backed by laboratory science. HPLC verified, farm direct, zero toxins."/>
+  <meta property="og:image" content="/images/logo-web.png"/>
+  <meta property="og:type" content="website"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* ============================================
+       SARVASVA NATURALS — COMPLETE PAGE STYLES
+       ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; color: #1a1a1a; background: #fff; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    /* ── ANNOUNCEMENT BAR ── */
+    .ann-bar {
+      background: #1a2e0f;
+      color: #d4a853;
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      height: 36px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .ann-bar .ticker {
+      display: flex;
+      white-space: nowrap;
+      animation: ticker 35s linear infinite;
+    }
+    .ann-bar .ticker span { padding-right: 80px; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #e8e2d8;
+      height: 68px;
+      transition: box-shadow 0.3s;
+    }
+    .navbar.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .nav-inner {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      flex-direction: column;
+      margin-right: auto;
+    }
+    .nav-logo .logo-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: #1a2e0f;
+      letter-spacing: 0.3px;
+      line-height: 1.1;
+    }
+    .nav-logo .logo-sub {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8aab6a;
+      margin-top: 1px;
+    }
+
+    /* Nav links — center */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .nav-links a {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #333;
+      letter-spacing: 0.2px;
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: #1a2e0f;
+      transition: width 0.25s;
+    }
+    .nav-links a:hover { color: #1a2e0f; }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    /* Right side actions */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    /* Search */
+    .nav-search-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      color: #444;
+      transition: background 0.2s;
+    }
+    .nav-search-btn:hover { background: #f0ebe3; color: #1a2e0f; }
+
+    /* LOGIN BUTTON — prominent, top right */
+    .nav-login-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 18px;
+      border: 1.5px solid #1a2e0f;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a2e0f;
+      letter-spacing: 0.3px;
+      transition: all 0.2s;
+    }
+    .nav-login-btn:hover {
+      background: #1a2e0f;
+      color: #fff;
+    }
+
+    /* User dropdown (when logged in) */
+    .nav-user-wrap { position: relative; }
+    .nav-user-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a2e0f;
+      border: 1.5px solid #e0d8cc;
+      transition: all 0.2s;
+    }
+    .nav-user-btn:hover { background: #f5f0e8; }
+    .nav-user-btn .avatar {
+      width: 26px; height: 26px;
+      background: #1a2e0f;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      color: #d4a853;
+      font-weight: 700;
+    }
+    .user-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      border: 1px solid #e8e2d8;
+      min-width: 200px;
+      padding: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: all 0.2s;
+      z-index: 100;
+    }
+    .nav-user-wrap:hover .user-dropdown,
+    .nav-user-wrap .user-dropdown.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+    /* Bridge gap so dropdown doesn't close when moving mouse */
+    .user-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -12px; left: 0; right: 0;
+      height: 12px;
+    }
+    .user-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 7px;
+      font-size: 13.5px;
+      color: #333;
+      transition: background 0.15s;
+    }
+    .user-dropdown a:hover { background: #f5f0e8; color: #1a2e0f; }
+    .user-dropdown a i { width: 16px; color: #888; }
+    .user-dropdown hr { border: none; border-top: 1px solid #e8e2d8; margin: 4px 0; }
+    .user-dropdown .logout-link { color: #c62828 !important; }
+    .user-dropdown .logout-link i { color: #c62828 !important; }
+
+    /* Cart button */
+    .nav-cart-btn {
+      position: relative;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      color: #1a2e0f;
+      transition: background 0.2s;
+    }
+    .nav-cart-btn:hover { background: #f0ebe3; }
+    .cart-badge {
+      position: absolute;
+      top: 1px; right: 1px;
+      background: #c4622d;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      line-height: 1;
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      width: 30px;
+      margin-left: 8px;
+    }
+    .hamburger span {
+      display: block;
+      height: 2px;
+      background: #1a2e0f;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* Search bar slide-down */
+    .search-drawer {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: #fff;
+      padding: 20px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      z-index: 2000;
+      transform: translateY(-100%);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .search-drawer.open { transform: translateY(0); }
+    .search-drawer form {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #f5f0e8;
+      border-radius: 40px;
+      padding: 12px 20px;
+      gap: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .search-drawer input {
+      flex: 1;
+      border: none;
+      background: none;
+      outline: none;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .search-drawer button[type="submit"] { color: #1a2e0f; font-size: 16px; }
+    .search-close-btn { font-size: 20px; color: #888; padding: 8px; transition: color 0.2s; }
+    .search-close-btn:hover { color: #1a2e0f; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: calc(100vh - 104px);
+      background: linear-gradient(130deg, #1a2e0f 0%, #243b16 55%, #1e3512 100%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* subtle texture */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 20% 80%, rgba(212,168,83,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(138,171,106,0.06) 0%, transparent 50%);
+    }
+    .hero-left {
+      padding: 80px 60px 80px 80px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(212,168,83,0.12);
+      border: 1px solid rgba(212,168,83,0.3);
+      border-radius: 40px;
+      padding: 7px 16px;
+      font-size: 11px;
+      color: #d4a853;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow::before { content: '✓'; }
+    .hero-h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(38px, 4.5vw, 64px);
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .hero-h1 em { color: #d4a853; font-style: italic; }
+    .hero-p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.75;
+      max-width: 420px;
+      margin-bottom: 40px;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 15px 30px;
+      background: #d4a853;
+      color: #1a2e0f;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      transition: all 0.2s;
+    }
+    .btn-gold:hover { background: #e8c97a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,168,83,0.35); }
+    .btn-ghost-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 15px 28px;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.9);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn-ghost-white:hover { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.07); }
+
+    /* Hero stats row */
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero-stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: #d4a853;
+      font-weight: 700;
+      display: block;
+    }
+    .hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; letter-spacing: 0.3px; }
+
+    /* Hero right image side */
+    .hero-right {
+      position: relative;
+      height: 100%;
+      min-height: 600px;
+    }
+    .hero-img-main {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.55;
+    }
+    /* floating card over image */
+    .hero-float-card {
+      position: absolute;
+      bottom: 48px;
+      left: -30px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px 24px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+      min-width: 240px;
+    }
+    .hfc-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+    .hfc-value { font-family: 'Playfair Display', serif; font-size: 22px; color: #1a2e0f; font-weight: 700; margin-bottom: 3px; }
+    .hfc-sub { font-size: 12px; color: #5a7a3a; font-weight: 500; }
+    .hfc-stars { color: #d4a853; font-size: 12px; margin-top: 8px; letter-spacing: 2px; }
+
+    /* trust badges strip on hero */
+    .hero-badges {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      padding: 14px 24px;
+    }
+    .hero-badge-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+    }
+    .hero-badge-item i { color: #d4a853; font-size: 14px; }
+
+    /* ── SECTION COMMON ── */
+    .section { padding: 72px 24px; }
+    .section-inner { max-width: 1380px; margin: 0 auto; }
+    .sec-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #5a7a3a;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 3.5vw, 44px);
+      color: #1a2e0f;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .sec-title em { font-style: italic; color: #8b6914; }
+    .sec-sub { font-size: 15px; color: #666; max-width: 540px; line-height: 1.7; }
+    .sec-header-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 44px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .view-all-link {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1a2e0f;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border: 1.5px solid #1a2e0f;
+      border-radius: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .view-all-link:hover { background: #1a2e0f; color: #fff; }
+
+    /* ── CATEGORY CHIPS ── */
+    .cat-grid {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .cat-grid::-webkit-scrollbar { display: none; }
+    .cat-chip {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 28px;
+      background: #f5f0e8;
+      border-radius: 12px;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 110px;
+      text-align: center;
+    }
+    .cat-chip:hover { border-color: #1a2e0f; background: #fff; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(26,46,15,0.1); }
+    .cat-chip .emoji { font-size: 30px; }
+    .cat-chip .name { font-size: 13px; font-weight: 600; color: #1a2e0f; }
+    .cat-chip .count { font-size: 11px; color: #888; }
+
+    /* ── PRODUCT CARDS ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .prod-card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1.5px solid #e8e2d8;
+      transition: all 0.25s;
+      position: relative;
+    }
+    .prod-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(26,46,15,0.12); border-color: #c8c0b4; }
+    .prod-img-wrap {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #f5f0e8;
+    }
+    .prod-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .prod-card:hover .prod-img-wrap img { transform: scale(1.05); }
+    .prod-tag {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: #1a2e0f;
+      color: #d4a853;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+    .prod-tag.sale { background: #c4622d; color: #fff; }
+    .prod-quick-add {
+      position: absolute;
+      bottom: 12px; left: 12px; right: 12px;
+      background: #1a2e0f;
+      color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+    .prod-card:hover .prod-quick-add { opacity: 1; transform: translateY(0); }
+    .prod-quick-add:hover { background: #2d5016; }
+    .prod-body { padding: 16px 18px 18px; }
+    .prod-origin { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #5a7a3a; font-weight: 600; margin-bottom: 5px; }
+    .prod-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: #1a2e0f;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .prod-name a { color: inherit; }
+    .prod-name a:hover { color: #5a7a3a; }
+    .prod-stars { color: #d4a853; font-size: 11px; letter-spacing: 1px; margin-bottom: 12px; }
+    .prod-stars span { color: #888; font-size: 11px; margin-left: 4px; }
+    .prod-price-row { display: flex; align-items: center; gap: 10px; }
+    .prod-price { font-size: 19px; font-weight: 700; color: #1a2e0f; }
+    .prod-price-orig { font-size: 13px; color: #aaa; text-decoration: line-through; }
+    .prod-discount {
+      font-size: 11px;
+      font-weight: 700;
+      color: #c4622d;
+      background: rgba(196,98,45,0.1);
+      padding: 2px 7px;
+      border-radius: 20px;
+    }
+
+    /* ── TESTIMONIAL / DOCTOR ── */
+    .doctor-section { background: #f5f0e8; }
+    .doctor-card {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 60px;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(26,46,15,0.08);
+      padding: 0;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .doctor-img-wrap { position: relative; height: 320px; }
+    .doctor-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .doctor-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 70%, #fff);
+    }
+    .doctor-content { padding: 40px 40px 40px 0; }
+    .doctor-eyebrow { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #5a7a3a; margin-bottom: 16px; font-weight: 600; }
+    .doctor-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      line-height: 1.7;
+      color: #333;
+      font-style: italic;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .doctor-quote::before { content: '\201C'; font-size: 60px; color: #d4a853; line-height: 0; vertical-align: -0.4em; margin-right: 4px; font-style: normal; }
+    .doctor-name { font-weight: 700; font-size: 15px; color: #1a2e0f; }
+    .doctor-title { font-size: 12px; color: #888; margin-top: 2px; }
+    .doctor-badges { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+    .doc-badge {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px;
+      border: 1px solid #e0d8cc;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a2e0f;
+    }
+    .doc-badge i { color: #d4a853; }
+
+    /* ── PROCESS STRIP ── */
+    .process-strip { background: #1a2e0f; padding: 64px 24px; }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .process-item { text-align: center; }
+    .process-icon-wrap {
+      width: 60px; height: 60px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+      font-size: 26px;
+      color: #d4a853;
+      transition: all 0.2s;
+    }
+    .process-item:hover .process-icon-wrap { background: rgba(212,168,83,0.15); transform: translateY(-4px); }
+    .process-item h3 { font-family: 'Playfair Display', serif; color: #fff; font-size: 17px; margin-bottom: 10px; }
+    .process-item p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+    .process-cta { text-align: center; margin-top: 44px; }
+
+    /* ── VERIFY STRIP ── */
+    .verify-strip {
+      background: #ede6d8;
+      padding: 64px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .verify-strip::after {
+      content: '⚗';
+      position: absolute;
+      right: 8%;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 180px;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    .verify-form {
+      display: flex;
+      gap: 10px;
+      max-width: 440px;
+      margin: 28px auto 0;
+    }
+    .verify-form input {
+      flex: 1;
+      padding: 13px 20px;
+      border: 1.5px solid #c8c0b4;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+    .verify-form input:focus { border-color: #1a2e0f; }
+    .btn-verify {
+      padding: 13px 24px;
+      background: #1a2e0f;
+      color: #fff;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .btn-verify:hover { background: #2d5016; }
+
+    /* ── FOOTER ── */
+    .footer { background: #1a2e0f; color: rgba(255,255,255,0.7); padding: 60px 24px 28px; }
+    .footer-grid {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-brand .f-logo { font-family: 'Playfair Display', serif; font-size: 20px; color: #fff; font-weight: 700; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13.5px; line-height: 1.7; max-width: 260px; }
+    .footer-social { display: flex; gap: 10px; margin-top: 20px; }
+    .footer-social a {
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      transition: all 0.2s;
+    }
+    .footer-social a:hover { background: #d4a853; color: #1a2e0f; }
+    .footer-col h4 { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px; }
+    .footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+    .footer-col a { font-size: 13.5px; transition: color 0.2s; }
+    .footer-col a:hover { color: #d4a853; }
+    .footer-bottom {
+      max-width: 1380px;
+      margin: 24px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12.5px;
+    }
+    .pay-methods { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.45); }
+
+    /* ── CART TOAST ── */
+    .cart-toast {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      background: #1a2e0f;
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+      z-index: 9999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+    .cart-toast.show { transform: translateY(0); opacity: 1; }
+    .cart-toast i { color: #d4a853; font-size: 18px; }
+    .cart-toast a { color: #d4a853; font-weight: 600; font-size: 13px; margin-left: 6px; }
+
+    /* ── MOBILE ── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 280px;
+      height: 100vh;
+      background: #fff;
+      z-index: 3000;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+    }
+    .mobile-nav.open { transform: translateX(0); }
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 2999;
+    }
+    .mobile-overlay.open { display: block; }
+    .mobile-nav-header {
+      padding: 20px;
+      border-bottom: 1px solid #e8e2d8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mobile-nav-links { padding: 16px; flex: 1; overflow-y: auto; }
+    .mobile-nav-links a {
+      display: block;
+      padding: 13px 16px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1a2e0f;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .mobile-nav-links a:hover { background: #f5f0e8; }
+    .mobile-nav-links hr { border: none; border-top: 1px solid #e8e2d8; margin: 8px 0; }
+    .mobile-nav-footer { padding: 16px 20px; border-top: 1px solid #e8e2d8; }
+    .mobile-login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #1a2e0f;
+      color: #fff;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+      display: block;
+    }
+
+    @media (max-width: 1024px) {
+      .products-grid { grid-template-columns: repeat(3, 1fr); }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-right { display: none; }
+      .hero-left { padding: 64px 32px; }
+      .doctor-card { grid-template-columns: 1fr; }
+      .doctor-img-wrap { height: 280px; }
+      .doctor-img-wrap::after { background: linear-gradient(to top, #fff, transparent); }
+      .doctor-content { padding: 0 32px 32px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-login-btn { display: none; }
+      .hamburger { display: flex; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .process-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-left { padding: 48px 24px; }
+      .hero-stats { gap: 20px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .verify-form { flex-direction: column; }
+    }
+    @media (max-width: 480px) {
+      .cat-grid { gap: 10px; }
+      .cat-chip { padding: 16px 20px; min-width: 90px; }
+    }
+  </style>
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+
+<!-- ═══════════════════════════════════════
+     ANNOUNCEMENT BAR
+═══════════════════════════════════════ -->
+<div class="ann-bar">
+  <div class="ticker">
+    <span>🌿 Free shipping on orders above ₹999 &nbsp;·&nbsp; HPLC Verified Every Batch &nbsp;·&nbsp; Zero Toxins Guaranteed &nbsp;·&nbsp; Farm Direct Sourcing &nbsp;·&nbsp; 100% Certified Organic &nbsp;·&nbsp; 30-day Returns &nbsp;·&nbsp;</span>
+    <span>🌿 Free shipping on orders above ₹999 &nbsp;·&nbsp; HPLC Verified Every Batch &nbsp;·&nbsp; Zero Toxins Guaranteed &nbsp;·&nbsp; Farm Direct Sourcing &nbsp;·&nbsp; 100% Certified Organic &nbsp;·&nbsp; 30-day Returns &nbsp;·&nbsp;</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+
+    <!-- Logo -->
+    <a href="/" class="nav-logo">
+      <img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:40px;width:auto;object-fit:contain;">
+      <span class="logo-sub">Purity in Every Grain</span>
+    </a>
+
+    <!-- Centre links -->
+    <ul class="nav-links">
+      <li><a href="/shop">Shop All</a></li>
+      <li><a href="/our-process">Our Process</a></li>
+      <li><a href="/lab-reports">Lab Reports</a></li>
+      <li><a href="/about">About Us</a></li>
+    </ul>
+
+    <!-- Right actions -->
+    <div class="nav-actions">
+
+      <!-- Search -->
+      <button class="nav-search-btn" id="searchToggle" aria-label="Search">
+        <i class="fas fa-search"></i>
+      </button>
+
+      <!-- LOGIN BUTTON (shown when NOT logged in) -->
+      <div sec:authorize="isAnonymous()">
+        <a href="/login" class="nav-login-btn">
+          <i class="fas fa-user"></i> Login / Register
+        </a>
+      </div>
+
+      <!-- USER MENU (shown when logged in) -->
+      <div sec:authorize="isAuthenticated()" class="nav-user-wrap">
+        <button class="nav-user-btn">
+          <div class="avatar">
+            <i class="fas fa-user" style="font-size:11px;"></i>
+          </div>
+          <span sec:authentication="name">My Account</span>
+          <i class="fas fa-chevron-down" style="font-size:10px;color:#888;"></i>
+        </button>
+        <div class="user-dropdown">
+          <a href="/account"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>
+          <a href="/account/orders"><i class="fas fa-box"></i> My Orders</a>
+          <a href="/account/profile"><i class="fas fa-cog"></i> Profile Settings</a>
+          <div sec:authorize="hasRole('ADMIN')">
+            <hr>
+            <a href="/admin" style="color:#1a2e0f;font-weight:600;">
+              <i class="fas fa-shield-alt" style="color:#5a7a3a;"></i> Admin Panel
+            </a>
+          </div>
+          <hr>
+          <a href="/logout" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+      </div>
+
+      <!-- Cart -->
+      <a href="/cart" class="nav-cart-btn" aria-label="Cart">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-badge" id="cartCount"
+              th:text="${cartCount}"
+              th:style="${cartCount > 0} ? 'display:flex' : 'display:none'">0</span>
+      </a>
+
+      <!-- Hamburger (mobile) -->
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Search Drawer -->
+<div class="search-drawer" id="searchDrawer">
+  <form action="/search" method="get" class="search-form">
+    <i class="fas fa-search" style="color:#888;"></i>
+    <input type="text" name="q" placeholder="Search for turmeric, pepper, cardamom..." autocomplete="off">
+    <button type="submit"><i class="fas fa-arrow-right"></i></button>
+  </form>
+  <button class="search-close-btn" id="searchClose">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
+
+<!-- Mobile Nav -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-header">
+    <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#1a2e0f;">Sarvasva Naturals</span>
+    <button id="mobileClose" style="font-size:20px;color:#888;"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="mobile-nav-links">
+    <a href="/shop"><i class="fas fa-store" style="margin-right:10px;color:#5a7a3a;"></i> Shop All</a>
+    <a href="/our-process"><i class="fas fa-flask" style="margin-right:10px;color:#5a7a3a;"></i> Our Process</a>
+    <a href="/lab-reports"><i class="fas fa-file-alt" style="margin-right:10px;color:#5a7a3a;"></i> Lab Reports</a>
+    <a href="/about"><i class="fas fa-leaf" style="margin-right:10px;color:#5a7a3a;"></i> About Us</a>
+    <a href="/verify-purity"><i class="fas fa-check-circle" style="margin-right:10px;color:#5a7a3a;"></i> Verify Purity</a>
+    <hr>
+    <div sec:authorize="isAuthenticated()">
+      <a href="/account"><i class="fas fa-tachometer-alt" style="margin-right:10px;"></i> My Dashboard</a>
+      <a href="/account/orders"><i class="fas fa-box" style="margin-right:10px;"></i> My Orders</a>
+      <a href="/cart"><i class="fas fa-shopping-bag" style="margin-right:10px;"></i> Cart
+        <span th:if="${cartCount > 0}" th:text="'('+${cartCount}+')'" style="color:#c4622d;font-weight:700;"></span>
+      </a>
+      <a href="/logout" style="color:#c62828;"><i class="fas fa-sign-out-alt" style="margin-right:10px;"></i> Logout</a>
+    </div>
+    <div sec:authorize="isAnonymous()">
+      <a href="/cart"><i class="fas fa-shopping-bag" style="margin-right:10px;"></i> Cart
+        <span th:if="${cartCount > 0}" th:text="'('+${cartCount}+')'" style="color:#c4622d;font-weight:700;"></span>
+      </a>
+    </div>
+  </div>
+  <div class="mobile-nav-footer" sec:authorize="isAnonymous()">
+    <a href="/login" class="mobile-login-btn">Login / Register</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     HERO SECTION
+═══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">100% Purity Guaranteed</div>
+    <h1 class="hero-h1">
+      Purity You Can<br>
+      Trust. <em>Spices<br>
+      Approved by<br>
+      Science.</em>
+    </h1>
+    <p class="hero-p">Every batch of our organic spices undergoes rigorous independent laboratory testing to ensure maximum bioavailability and zero contamination.</p>
+    <div class="hero-btns">
+      <a href="/shop" class="btn-gold">Shop the Collection <i class="fas fa-arrow-right"></i></a>
+      <a href="/lab-reports" class="btn-ghost-white"><i class="fas fa-flask"></i> View Lab Reports</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="hero-stat-val">9.5%</span>
+        <div class="hero-stat-label">Avg. Curcumin Content</div>
+      </div>
+      <div>
+        <span class="hero-stat-val">100%</span>
+        <div class="hero-stat-label">HPLC Verified</div>
+      </div>
+      <div>
+        <span class="hero-stat-val">0</span>
+        <div class="hero-stat-label">Heavy Metals Detected</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=900&q=80"
+         alt="Premium Spices" class="hero-img-main">
+    <div class="hero-float-card">
+      <div class="hfc-label">Lab Verified Result</div>
+      <div class="hfc-value">9.5% Curcumin</div>
+      <div class="hfc-sub">30% above market standard</div>
+      <div class="hfc-stars">★★★★★</div>
+    </div>
+    <div class="hero-badges">
+      <div class="hero-badge-item"><i class="fas fa-certificate"></i> HPLC Verified</div>
+      <div class="hero-badge-item"><i class="fas fa-shield-alt"></i> Zero Toxins</div>
+      <div class="hero-badge-item"><i class="fas fa-seedling"></i> Farm Direct</div>
+      <div class="hero-badge-item"><i class="fas fa-truck"></i> Free Shipping ₹999+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CATEGORIES
+═══════════════════════════════════════ -->
+<div class="section" style="background:#fff;padding-top:56px;padding-bottom:0;">
+  <div class="section-inner">
+    <div class="sec-header-row">
+      <div>
+        <div class="sec-eyebrow">Browse by Category</div>
+        <h2 class="sec-title">Find Your <em>Spice</em></h2>
+      </div>
+    </div>
+    <div class="cat-grid">
+      <a th:each="cat : ${categories}"
+         th:href="@{/category/{s}(s=${cat.slug})}"
+         class="cat-chip">
+        <span class="emoji" th:text="${cat.icon}">🌿</span>
+        <span class="name" th:text="${cat.name}">Turmeric</span>
+        <span class="count" th:text="${cat.products.size()} + ' products'">0 products</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     FEATURED PRODUCTS
+═══════════════════════════════════════ -->
+<div class="section" style="background:#faf8f4;">
+  <div class="section-inner">
+    <div class="sec-header-row">
+      <div>
+        <div class="sec-eyebrow">Featured Selection</div>
+        <h2 class="sec-title">Our most potent,<br><em>lab-certified</em> spices.</h2>
+      </div>
+      <a href="/shop" class="view-all-link">Browse All Products <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="products-grid">
+      <div th:each="product : ${featured}" class="prod-card">
+        <div class="prod-img-wrap">
+          <a th:href="@{/product/{s}(s=${product.slug})}">
+            <img th:src="${product.mainImageUrl}" th:alt="${product.name}" loading="lazy">
+          </a>
+          <div class="prod-tag" th:if="${product.bestSeller}">
+            <i class="fas fa-flask" style="font-size:8px;margin-right:3px;"></i>Lab Tested
+          </div>
+          <div class="prod-tag sale" th:if="${product.onSale}"
+               th:text="${product.discountPercent}+'% OFF'"></div>
+          <button class="prod-quick-add add-to-cart-btn"
+                  th:data-product-id="${product.id}"
+                  th:disabled="${product.stockQuantity == 0}">
+            <i class="fas fa-shopping-bag"></i>
+            <span th:text="${product.stockQuantity > 0} ? 'Quick Add' : 'Out of Stock'">Quick Add</span>
+          </button>
+        </div>
+        <div class="prod-body">
+          <div class="prod-origin" th:text="${product.origin}">Origin</div>
+          <div class="prod-name">
+            <a th:href="@{/product/{s}(s=${product.slug})}" th:text="${product.name}">Product Name</a>
+          </div>
+          <div class="prod-stars">
+            <th:block th:each="i : ${#numbers.sequence(1,5)}">
+              <th:block th:if="${i <= product.averageRating}">★</th:block>
+              <th:block th:unless="${i <= product.averageRating}">☆</th:block>
+            </th:block>
+            <span th:text="'(' + ${product.reviewCount} + ')'"></span>
+          </div>
+          <div class="prod-price-row">
+            <span class="prod-price" th:text="'₹' + ${product.price}">₹18</span>
+            <span class="prod-price-orig" th:if="${product.onSale}"
+                  th:text="'₹' + ${product.originalPrice}"></span>
+            <span class="prod-discount" th:if="${product.onSale}"
+                  th:text="${product.discountPercent}+'% off'"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     DOCTOR TESTIMONIAL
+═══════════════════════════════════════ -->
+<div class="section doctor-section">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:36px;">
+      <div class="sec-eyebrow">The Doctor's Choice</div>
+      <h2 class="sec-title">Trusted by Medical <em>Professionals</em></h2>
+    </div>
+    <div class="doctor-card">
+      <div class="doctor-img-wrap">
+        <img src="/images/dr-yogesh-wankhede.jpg"
+             alt="Dr. Yogesh Wankhede">
+      </div>
+      <div class="doctor-content">
+        <div class="doctor-eyebrow">Verified Medical Professional</div>
+        <p class="doctor-quote">Sarvasva Naturals was born from my belief that Ayurveda deserves the same rigour as modern medicine. Every spice we sell carries a promise — rooted in ancient wisdom, validated by contemporary science. Purity is not just our product standard; it is our purpose.</p>
+        <div class="doctor-name">Dr. Yogesh Wankhede</div>
+        <div class="doctor-title">Ayurvedic Wellness Expert, Sarvasva Naturals</div>
+        <div class="doctor-badges">
+          <div class="doc-badge"><i class="fas fa-certificate"></i> HPLC Verified</div>
+          <div class="doc-badge"><i class="fas fa-shield-alt"></i> Zero Toxins</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     BESTSELLERS
+═══════════════════════════════════════ -->
+<div class="section" style="background:#fff;">
+  <div class="section-inner">
+    <div class="sec-header-row">
+      <div>
+        <div class="sec-eyebrow">Bestsellers</div>
+        <h2 class="sec-title">Customer <em>Favourites</em></h2>
+      </div>
+      <a href="/shop?sort=bestseller" class="view-all-link">See All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="products-grid">
+      <div th:each="product : ${topSellers}" class="prod-card">
+        <div class="prod-img-wrap">
+          <a th:href="@{/product/{s}(s=${product.slug})}">
+            <img th:src="${product.mainImageUrl}" th:alt="${product.name}" loading="lazy">
+          </a>
+          <div class="prod-tag"><i class="fas fa-fire" style="font-size:8px;margin-right:3px;"></i>Bestseller</div>
+          <button class="prod-quick-add add-to-cart-btn" th:data-product-id="${product.id}">
+            <i class="fas fa-shopping-bag"></i> Quick Add
+          </button>
+        </div>
+        <div class="prod-body">
+          <div class="prod-origin" th:text="${product.origin}"></div>
+          <div class="prod-name">
+            <a th:href="@{/product/{s}(s=${product.slug})}" th:text="${product.name}"></a>
+          </div>
+          <div class="prod-price-row">
+            <span class="prod-price" th:text="'₹'+${product.price}"></span>
+            <span class="prod-price-orig" th:if="${product.onSale}" th:text="'₹'+${product.originalPrice}"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PROCESS STRIP
+═══════════════════════════════════════ -->
+<div class="process-strip">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:44px;">
+      <div class="sec-eyebrow" style="color:#8aab6a;">From Soil to Science</div>
+      <h2 class="sec-title" style="color:#fff;">Our Three-Step <em style="color:#d4a853;">Protocol</em></h2>
+      <p style="color:rgba(255,255,255,0.55);max-width:480px;margin:12px auto 0;font-size:15px;">Every grain meets pharmaceutical-grade standards for purity and potency.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-item">
+        <div class="process-icon-wrap"><i class="fas fa-seedling"></i></div>
+        <h3>1. Ethical Sourcing</h3>
+        <p>Direct partnerships with organic heritage farms in India. Regenerative soil practices &amp; fair-trade pricing for every farmer.</p>
+      </div>
+      <div class="process-item">
+        <div class="process-icon-wrap"><i class="fas fa-microscope"></i></div>
+        <h3>2. Empirical Testing</h3>
+        <p>HPLC-tested in ISO-certified labs. Curcuminoids, essential oils, and heavy-metal-free status verified every batch.</p>
+      </div>
+      <div class="process-item">
+        <div class="process-icon-wrap"><i class="fas fa-box"></i></div>
+        <h3>3. Protective Packaging</h3>
+        <p>Light-blocking, oxygen-barrier glass jars prevent degradation of volatile essential oils and preserve freshness.</p>
+      </div>
+    </div>
+    <div class="process-cta">
+      <a href="/our-process" class="btn-ghost-white">Learn About Our Standards <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     BATCH VERIFY
+═══════════════════════════════════════ -->
+<div class="verify-strip">
+  <div style="position:relative;z-index:2;">
+    <div class="sec-eyebrow" style="text-align:center;">Verify Your Batch Integrity</div>
+    <h2 class="sec-title" style="text-align:center;">Uncompromising <em>Proof.</em></h2>
+    <p style="color:#666;max-width:460px;margin:12px auto 0;font-size:15px;text-align:center;">Enter your product's batch code to view its specific lab report, HPLC data, and origin certificate.</p>
+    <form action="/verify-purity" method="get" class="verify-form">
+      <input type="text" name="batch" placeholder="Enter Batch Code (e.g. SN-2024-001)" required>
+      <button type="submit" class="btn-verify">Verify Purity</button>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo"><img src="/images/logo-small.png" alt="Sarvasva Naturals" style="height:60px;width:auto;"></div>
+      <p>Premium Ayurvedic spices backed by contemporary laboratory testing. Purity without compromise.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/sarvasva.naturals?igsh=Z2xhNTZ4cXF4MTRl" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/share/1CnCt3kfpa/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="/shop">Shop All</a></li>
+        <li><a href="/our-process">Our Process</a></li>
+        <li><a href="/lab-reports">Lab Reports</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/refund-policy">Return Policy</a></li>
+        <li><a href="/shipping-info">Shipping Info</a></li>
+        <li><a href="/refund-policy">Refund Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Get in Touch</h4>
+      <ul>
+        <li><a href="mailto:Yogesh.saarth@gmail.com">Yogesh.saarth@gmail.com</a></li>
+        <li><a href="tel:+919876543210">+91 98687 26202</a></li>
+      </ul>
+      <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,0.6);">🔒 SSL Secured</span>
+        <span style="background:rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,0.6);">✅ FSSAI</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Sarvasva Naturals. Purity in Every Grain.</p>
+    <div class="pay-methods">
+      <span>GPay</span> · <span>PhonePe</span> · <span>UPI</span> · <span>Razorpay</span> · <span>Cards</span> · <span>COD</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Cart Toast -->
+<div class="cart-toast" id="cartToast">
+  <i class="fas fa-check-circle"></i>
+  <span>Added to cart!</span>
+  <a href="/cart">View Cart →</a>
+</div>
+
+<script>
+  // ── Navbar scroll shadow
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  // ── Search drawer
+  const searchDrawer = document.getElementById('searchDrawer');
+  document.getElementById('searchToggle').addEventListener('click', () => {
+    searchDrawer.classList.add('open');
+    searchDrawer.querySelector('input').focus();
+  });
+  document.getElementById('searchClose').addEventListener('click', () => searchDrawer.classList.remove('open'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') searchDrawer.classList.remove('open'); });
+
+  // ── Mobile nav
+  const mobileNav = document.getElementById('mobileNav');
+  const overlay = document.getElementById('mobileOverlay');
+  function openMobile() { mobileNav.classList.add('open'); overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeMobile() { mobileNav.classList.remove('open'); overlay.classList.remove('open'); document.body.style.overflow = ''; }
+  document.getElementById('hamburger').addEventListener('click', openMobile);
+  document.getElementById('mobileClose').addEventListener('click', closeMobile);
+  overlay.addEventListener('click', closeMobile);
+
+  // ── Cart count updater
+  function updateCartCount(count) {
+    const el = document.getElementById('cartCount');
+    if (!el) return;
+    el.textContent = count;
+    el.style.display = count > 0 ? 'flex' : 'none';
+  }
+
+  // ── Cart toast
+  function showToast() {
+    const t = document.getElementById('cartToast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // ── Add to cart buttons
+  document.querySelectorAll('.add-to-cart-btn, .prod-quick-add').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const productId = btn.dataset.productId;
+      if (!productId) return;
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      btn.style.pointerEvents = 'none';
+      try {
+        const res = await fetch('/api/cart/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId, quantity: 1 })
+        });
+        const data = await res.json();
+        if (data.success) {
+          updateCartCount(data.cartCount);
+          showToast();
+        }
+      } catch (err) { console.error(err); }
+      finally {
+        btn.innerHTML = originalHTML;
+        btn.style.pointerEvents = '';
+      }
+    });
+  });
+
+  // ── Scroll fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.prod-card, .process-item, .cat-chip').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>

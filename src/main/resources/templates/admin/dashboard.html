@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin Dashboard | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Sarvasva Naturals<br><span style="font-size:11px;color:var(--sage-lt);font-family:var(--font-body);">Admin Panel</span></div>
+    <nav class="admin-nav">
+      <a href="/admin" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-box-open"></i> Products</a>
+      <a href="/admin/categories"><i class="fas fa-tags"></i> Categories</a>
+      <a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+      <a href="/admin/coupons"><i class="fas fa-percent"></i> Coupons</a>
+      <a href="/admin/reviews"><i class="fas fa-star"></i> Reviews</a>
+      <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);margin:16px 0;"></div>
+      <a href="/"><i class="fas fa-home"></i> View Store</a>
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Dashboard</h1>
+      <span style="font-size:14px;color:var(--text-muted);" th:text="${#temporals.format(#temporals.createNow(),'EEEE, MMMM dd yyyy')}"></span>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value" th:text="'₹' + ${revenue}">₹0</div>
+            <div style="font-size:12px;color:var(--sage);margin-top:4px;"><i class="fas fa-arrow-up"></i> Paid orders</div>
+          </div>
+          <div style="font-size:32px;opacity:0.12;color:var(--forest);">₹</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-value" th:text="${totalOrders}">0</div>
+            <div style="font-size:12px;color:var(--sage);margin-top:4px;">Confirmed &amp; paid</div>
+          </div>
+          <div style="font-size:32px;opacity:0.12;color:var(--forest);"><i class="fas fa-shopping-cart"></i></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="stat-label">Products</div>
+            <div class="stat-value" th:text="${totalProducts}">0</div>
+            <div style="font-size:12px;color:var(--sage);margin-top:4px;">In catalogue</div>
+          </div>
+          <div style="font-size:32px;opacity:0.12;color:var(--forest);"><i class="fas fa-box-open"></i></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="stat-label">Customers</div>
+            <div class="stat-value" th:text="${totalUsers}">0</div>
+            <div style="font-size:12px;color:var(--sage);margin-top:4px;">Registered users</div>
+          </div>
+          <div style="font-size:32px;opacity:0.12;color:var(--forest);"><i class="fas fa-users"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="data-table">
+      <div style="padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
+        <h3 style="font-family:var(--font-display);font-size:18px;color:var(--forest);">Recent Orders</h3>
+        <a href="/admin/orders" class="btn-sm view">View All</a>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Order #</th><th>Customer</th><th>Amount</th>
+            <th>Payment</th><th>Status</th><th>Date</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="order : ${recentOrders}">
+            <td style="font-weight:600;" th:text="${order.orderNumber}"></td>
+            <td th:text="${order.shippingName}"></td>
+            <td style="font-weight:600;" th:text="'₹'+${order.totalAmount}"></td>
+            <td>
+              <span class="status-chip"
+                    th:classappend="${order.paymentStatus.name()=='PAID'}?'status-confirmed':'status-pending'"
+                    th:text="${order.paymentStatus}"></span>
+            </td>
+            <td>
+              <span class="status-chip"
+                    th:classappend="'status-'+${order.status.name().toLowerCase()}"
+                    th:text="${order.status}"></span>
+            </td>
+            <td style="color:var(--text-muted);font-size:13px;"
+                th:text="${#temporals.format(order.createdAt,'MMM dd, HH:mm')}"></td>
+            <td>
+              <div class="action-btns">
+                <a th:href="@{/admin/orders/{id}(id=${order.id})}" class="btn-sm view">View</a>
+              </div>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(recentOrders)}">
+            <td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted);">No pending orders</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Quick Actions -->
+    <div style="margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <a href="/admin/products/new" style="background:white;border-radius:12px;padding:20px;text-align:center;box-shadow:var(--shadow-sm);transition:var(--transition);display:block;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:28px;margin-bottom:8px;">➕</div>
+        <div style="font-weight:600;color:var(--forest);">Add Product</div>
+      </a>
+      <a href="/admin/coupons" style="background:white;border-radius:12px;padding:20px;text-align:center;box-shadow:var(--shadow-sm);transition:var(--transition);display:block;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:28px;margin-bottom:8px;">🏷️</div>
+        <div style="font-weight:600;color:var(--forest);">Create Coupon</div>
+      </a>
+      <a href="/admin/orders" style="background:white;border-radius:12px;padding:20px;text-align:center;box-shadow:var(--shadow-sm);transition:var(--transition);display:block;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:28px;margin-bottom:8px;">📦</div>
+        <div style="font-weight:600;color:var(--forest);">Manage Orders</div>
+      </a>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

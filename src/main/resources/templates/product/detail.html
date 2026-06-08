@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title th:text="${product.name} + ' | Sarvasva Naturals'">Product</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp; Zero Toxins &nbsp;·&nbsp; Farm Direct &nbsp;·&nbsp; 🌿 Free shipping above ₹999 &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/shop" class="active">Shop All</a></li>
+      <li><a href="/our-process">Our Process</a></li>
+      <li><a href="/lab-reports">Lab Reports</a></li>
+      <li><a href="/about">About Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" id="searchToggle"><i class="fas fa-search"></i></button>
+      <a href="/cart" class="cart-btn">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount>0}?'display:flex':'display:none'">0</span>
+      </a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div style="max-width:1400px;margin:0 auto;padding:16px 24px;">
+  <div class="breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span>
+    <a href="/shop">Shop</a><span class="sep">/</span>
+    <a th:if="${product.category}" th:href="@{/category/{s}(s=${product.category.slug})}" th:text="${product.category.name}"></a>
+    <span class="sep" th:if="${product.category}">/</span>
+    <span th:text="${product.name}"></span>
+  </div>
+</div>
+
+<div class="product-detail">
+  <!-- Gallery -->
+  <div class="product-gallery">
+    <div class="main-image">
+      <img th:src="${product.mainImageUrl}" th:alt="${product.name}" id="mainProductImg">
+    </div>
+    <div class="thumbnails" th:if="${product.images.size() > 1}">
+      <div th:each="img, iter : ${product.images}" class="thumbnail" th:classappend="${iter.index==0}?'active'"
+           th:onclick="'switchImage(this,\'' + ${img.imageUrl} + '\')'">
+        <img th:src="${img.imageUrl}" th:alt="${product.name}">
+      </div>
+    </div>
+  </div>
+
+  <!-- Info -->
+  <div class="product-info">
+    <div class="product-detail-origin" th:text="${product.origin}"></div>
+    <h1 class="product-detail-name" th:text="${product.name}"></h1>
+    <div class="product-rating" style="margin-bottom:20px;">
+      <span class="stars" style="font-size:16px;">
+        <th:block th:each="i : ${#numbers.sequence(1,5)}">
+          <i th:class="${i <= product.averageRating}?'fas fa-star':'far fa-star'"></i>
+        </th:block>
+      </span>
+      <span style="font-size:14px;color:var(--text-muted);" th:text="'(' + ${product.reviewCount} + ' reviews)'"></span>
+    </div>
+    <div class="product-detail-price-row">
+      <span class="product-detail-price" th:text="'₹' + ${product.price}"></span>
+      <span class="product-detail-original" th:if="${product.onSale}" th:text="'₹' + ${product.originalPrice}"></span>
+      <span class="product-detail-discount" th:if="${product.onSale}" th:text="${product.discountPercent} + '% OFF'"></span>
+    </div>
+    <p style="font-size:13px;color:var(--sage);margin-bottom:20px;">
+      <i class="fas fa-truck"></i>
+      <span th:text="${product.price.compareTo(new java.math.BigDecimal('999'))>=0?'FREE Shipping on this order':'Free shipping above ₹999'}"></span>
+    </p>
+    <div class="product-badges">
+      <div class="p-badge"><i class="fas fa-certificate icon"></i> HPLC Verified</div>
+      <div class="p-badge"><i class="fas fa-shield-alt icon"></i> Zero Toxins</div>
+      <div class="p-badge"><i class="fas fa-leaf icon"></i> Organic</div>
+      <div class="p-badge" th:if="${product.origin}"><i class="fas fa-map-marker-alt icon"></i> <span th:text="${product.origin}"></span></div>
+    </div>
+    <p class="product-desc" th:text="${product.description}"></p>
+
+    <!-- Weight Selector -->
+    <div class="weight-selector" th:if="${product.weightOptions != null}">
+      <label>Select Weight</label>
+      <div class="weight-options">
+        <button th:each="w, iter : ${#strings.arraySplit(product.weightOptions,',')}"
+                class="weight-btn"
+                th:classappend="${iter.index==0}?'active'"
+                th:data-weight="${#strings.trim(w)}"
+                th:text="${#strings.trim(w)}"></button>
+      </div>
+    </div>
+
+    <!-- Quantity + Add to Cart -->
+    <div class="add-to-cart-row">
+      <div class="qty-control" style="margin-right:4px;">
+        <button class="qty-btn qty-minus">−</button>
+        <input type="number" class="qty-input" id="detailQty" value="1" min="1" max="99">
+        <button class="qty-btn qty-plus">+</button>
+      </div>
+      <button class="add-to-cart-large" th:data-product-id="${product.id}"
+              th:disabled="${product.stockQuantity==0}">
+        <i class="fas fa-shopping-bag"></i>
+        <span th:text="${product.stockQuantity>0}?'Add to Cart':'Out of Stock'">Add to Cart</span>
+      </button>
+      <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+    </div>
+
+    <!-- Specs -->
+    <div class="product-specs">
+      <div class="spec-row">
+        <span class="spec-label">Variety</span>
+        <span class="spec-value" th:text="${product.variety}">—</span>
+      </div>
+      <div class="spec-row" th:if="${product.curcuminContent}">
+        <span class="spec-label">Curcumin Content</span>
+        <span class="spec-value" th:text="${product.curcuminContent}"></span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Origin</span>
+        <span class="spec-value" th:text="${product.origin}">—</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">HPLC Verified</span>
+        <span class="spec-value" style="color:var(--sage);">✓ Yes, every batch</span>
+      </div>
+      <div class="spec-row" th:if="${product.batchCode}">
+        <span class="spec-label">Current Batch</span>
+        <span class="spec-value">
+          <a th:href="@{/verify-purity(batch=${product.batchCode})}" style="color:var(--forest);text-decoration:underline;" th:text="${product.batchCode}"></a>
+        </span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Stock Status</span>
+        <span class="spec-value" th:text="${product.stockQuantity>0}?'In Stock ('+product.stockQuantity+' units)':'Out of Stock'"
+              th:style="${product.stockQuantity>0}?'color:var(--sage)':'color:#c62828'"></span>
+      </div>
+    </div>
+
+    <!-- Trust row -->
+    <div style="display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);">
+        <i class="fas fa-undo" style="color:var(--sage);"></i> 7-day easy returns
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);">
+        <i class="fas fa-lock" style="color:var(--sage);"></i> Secure checkout
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);">
+        <i class="fas fa-truck" style="color:var(--sage);"></i> Ships in 1-2 days
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Related Products -->
+<div class="section" th:if="${not #lists.isEmpty(related)}">
+  <div class="section-header-row">
+    <div>
+      <div class="section-label">You May Also Like</div>
+      <h2 class="section-title">Related <em>Products</em></h2>
+    </div>
+    <a href="/shop" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="products-grid">
+    <div th:each="rel : ${related}" th:if="${rel.id != product.id}" class="product-card">
+      <div class="product-card-img">
+        <a th:href="@{/product/{s}(s=${rel.slug})}">
+          <img th:src="${rel.mainImageUrl}" th:alt="${rel.name}" loading="lazy">
+        </a>
+      </div>
+      <div class="product-card-body">
+        <div class="product-origin" th:text="${rel.origin}"></div>
+        <a th:href="@{/product/{s}(s=${rel.slug})}"><div class="product-name" th:text="${rel.name}"></div></a>
+        <div class="product-price-row">
+          <span class="product-price" th:text="'₹'+${rel.price}"></span>
+        </div>
+        <button class="add-to-cart-btn" th:data-product-id="${rel.id}">
+          <i class="fas fa-shopping-bag"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand"><div class="footer-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:40px;width:auto;filter:brightness(0) invert(1);object-fit:contain;"></div><p>Purity without compromise.</p></div>
+    <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="/shop">Shop All</a></li><li><a href="/our-process">Our Process</a></li></ul></div>
+    <div class="footer-links"><h4>Legal</h4><ul><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="#">Returns</a></li></ul></div>
+    <div class="footer-links"><h4>Connect</h4><ul><li>Yogesh.saarth@gmail.com</li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Sarvasva Naturals</p></div>
+</footer>
+
+<div class="cart-toast" id="cartToast"><i class="fas fa-check-circle"></i><span>Added to cart!</span><a href="/cart" class="toast-view">View Cart →</a></div>
+<script src="/js/main.js" defer></script>
+<script>
+function switchImage(thumb, src) {
+  document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+  const img = document.getElementById('mainProductImg');
+  img.style.opacity = '0';
+  setTimeout(() => { img.src = src; img.style.opacity = '1'; }, 200);
+  img.style.transition = 'opacity 0.2s';
+}
+</script>
+</body>
+</html>

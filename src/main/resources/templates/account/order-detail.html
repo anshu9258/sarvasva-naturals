@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title th:text="'Order ' + ${order.orderNumber} + ' | Sarvasva Naturals'">Order Detail</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 Questions about your order? Email Yogesh.saarth@gmail.com &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <div class="nav-actions">
+      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i></a>
+    </div>
+  </div>
+</nav>
+
+<div style="background:linear-gradient(135deg,#f5f0e8,#ede6d8);padding:40px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="breadcrumb">
+      <a href="/account">Account</a><span class="sep">/</span>
+      <a href="/account/orders">Orders</a><span class="sep">/</span>
+      <span th:text="${order.orderNumber}"></span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <h1 style="font-family:var(--font-display);font-size:28px;color:var(--forest);"
+          th:text="'Order #' + ${order.orderNumber}"></h1>
+      <span class="status-chip" style="font-size:14px;padding:8px 16px;"
+            th:classappend="'status-'+${order.status.name().toLowerCase()}"
+            th:text="${order.status}"></span>
+    </div>
+  </div>
+</div>
+
+<div style="max-width:1100px;margin:0 auto;padding:40px 24px;">
+  <div style="display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;" class="order-detail-grid">
+
+    <!-- Left: Items + Tracking -->
+    <div>
+      <!-- Order Items -->
+      <div class="account-card">
+        <h3 style="font-family:var(--font-display);font-size:20px;color:var(--forest);margin-bottom:20px;">Items Ordered</h3>
+        <div th:each="item : ${order.items}"
+             style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);">
+          <img th:src="${item.product.mainImageUrl}"
+               style="width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;">
+          <div style="flex:1;">
+            <a th:href="@{/product/{s}(s=${item.product.slug})}">
+              <div style="font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--forest);margin-bottom:4px;"
+                   th:text="${item.productName}"></div>
+            </a>
+            <div style="font-size:13px;color:var(--text-muted);" th:if="${item.selectedWeight}"
+                 th:text="'Size: ' + ${item.selectedWeight}"></div>
+            <div style="font-size:13px;color:var(--text-muted);" th:text="'Qty: ' + ${item.quantity}"></div>
+            <div style="font-size:14px;font-weight:600;color:var(--forest);margin-top:6px;"
+                 th:text="'₹' + ${item.unitPrice} + ' × ' + ${item.quantity} + ' = ₹' + ${item.subtotal}"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tracking -->
+      <div class="account-card" th:if="${order.trackingNumber}">
+        <h3 style="font-family:var(--font-display);font-size:20px;color:var(--forest);margin-bottom:20px;">
+          <i class="fas fa-truck" style="color:var(--sage);"></i> Shipment Tracking
+        </h3>
+        <div style="background:var(--warm);border-radius:10px;padding:16px;margin-bottom:20px;">
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px;">Tracking Number</div>
+          <div style="font-weight:700;font-size:18px;" th:text="${order.trackingNumber}"></div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:4px;" th:text="'via ' + ${order.courierName}"></div>
+        </div>
+        <!-- Order timeline -->
+        <div style="position:relative;padding-left:28px;">
+          <div style="position:absolute;left:8px;top:12px;bottom:12px;width:2px;background:var(--border);"></div>
+          <div th:each="step : ${ {{'PENDING','Order Placed','check-circle'},{'CONFIRMED','Payment Confirmed','credit-card'},{'PROCESSING','Being Processed','cog'},{'SHIPPED','Shipped','truck'},{'DELIVERED','Delivered','home'}} }"
+               style="position:relative;margin-bottom:20px;">
+            <div style="position:absolute;left:-22px;top:2px;width:16px;height:16px;border-radius:50%;border:2px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;font-size:8px;"></div>
+            <div style="font-size:14px;font-weight:500;color:var(--forest);" th:text="${step[1]}"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping Address -->
+      <div class="account-card">
+        <h3 style="font-family:var(--font-display);font-size:20px;color:var(--forest);margin-bottom:16px;">
+          <i class="fas fa-map-marker-alt" style="color:var(--sage);"></i> Delivery Address
+        </h3>
+        <div style="font-weight:600;font-size:15px;" th:text="${order.shippingName}"></div>
+        <div style="color:var(--text-muted);margin-top:6px;line-height:1.7;">
+          <div th:text="${order.shippingAddressLine1}"></div>
+          <div th:if="${order.shippingAddressLine2}" th:text="${order.shippingAddressLine2}"></div>
+          <div th:text="${order.shippingCity} + ', ' + ${order.shippingState} + ' - ' + ${order.shippingPincode}"></div>
+          <div th:text="${order.shippingPhone}" style="margin-top:4px;font-weight:500;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Summary -->
+    <div>
+      <div class="cart-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-line">
+          <span>Order Date</span>
+          <span th:text="${#temporals.format(order.createdAt,'MMM dd, yyyy')}"></span>
+        </div>
+        <div class="summary-line">
+          <span>Payment</span>
+          <span th:text="${order.paymentMethod}"></span>
+        </div>
+        <div class="summary-line">
+          <span>Subtotal</span>
+          <span th:text="'₹'+${order.subtotal}"></span>
+        </div>
+        <div class="summary-line" th:if="${order.discountAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
+          <span>Discount</span>
+          <span style="color:var(--sage);" th:text="'-₹'+${order.discountAmount}"></span>
+        </div>
+        <div class="summary-line">
+          <span>Shipping</span>
+          <span th:text="${order.shippingCharge.compareTo(T(java.math.BigDecimal).ZERO)==0}?'FREE':'₹'+${order.shippingCharge}"></span>
+        </div>
+        <div class="summary-line">
+          <span>GST</span>
+          <span th:text="'₹'+${order.gstAmount}"></span>
+        </div>
+        <div class="summary-line total">
+          <span>Total</span>
+          <span th:text="'₹'+${order.totalAmount}"></span>
+        </div>
+        <div style="margin-top:16px;">
+          <span class="status-chip" style="width:100%;justify-content:center;display:flex;"
+                th:classappend="${order.paymentStatus.name()=='PAID'}?'status-confirmed':'status-pending'"
+                th:text="'Payment: '+${order.paymentStatus}"></span>
+        </div>
+        <a href="/shop" class="btn-outline" style="width:100%;justify-content:center;display:flex;margin-top:16px;">
+          Buy Again
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top:40px;">
+  <div class="footer-bottom" style="max-width:1400px;margin:0 auto;border-top:none;padding-top:0;">
+    <p>© 2026 Sarvasva Naturals</p>
+  </div>
+</footer>
+<style>
+  @media(max-width:768px){.order-detail-grid{grid-template-columns:1fr!important;}}
+</style>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

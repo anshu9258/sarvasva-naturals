@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Order Failed | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .failed-container { max-width: 560px; margin: 80px auto; text-align: center; padding: 40px 24px; }
+    .failed-icon { font-size: 64px; margin-bottom: 24px; }
+    .failed-title { font-family: var(--font-display); font-size: 32px; color: var(--forest); margin-bottom: 12px; }
+    .failed-msg { color: var(--text-muted); font-size: 16px; margin-bottom: 32px; }
+    .btn-retry { display: inline-block; padding: 14px 32px; background: var(--forest); color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 8px; }
+    .btn-home { display: inline-block; padding: 14px 32px; border: 2px solid var(--forest); color: var(--forest); border-radius: 8px; text-decoration: none; font-weight: 600; margin: 8px; }
+  </style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="failed-container">
+  <div class="failed-icon">❌</div>
+  <h1 class="failed-title">Payment Failed</h1>
+  <p class="failed-msg">We couldn't process your payment for order <strong th:text="${orderNumber}"></strong>. Please try again or choose a different payment method.</p>
+  <a href="/checkout" class="btn-retry">Try Again</a>
+  <a href="/" class="btn-home">Go to Home</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Verify Batch Purity | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 Every batch has a unique digital certificate &nbsp;·&nbsp; 100% Transparency &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/shop">Shop All</a></li>
+      <li><a href="/our-process">Our Process</a></li>
+      <li><a href="/lab-reports">Lab Reports</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i></a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div style="background:linear-gradient(135deg,var(--forest),#243b16);padding:80px 24px;text-align:center;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;font-size:300px;opacity:0.04;display:flex;align-items:center;justify-content:center;pointer-events:none;">⚗️</div>
+  <div style="position:relative;z-index:2;">
+    <div class="section-label" style="color:var(--sage-lt);">Batch Integrity</div>
+    <h1 class="section-title" style="color:white;">Verify Your <em>Purity</em></h1>
+    <p style="color:rgba(255,255,255,0.7);max-width:500px;margin:0 auto 40px;font-size:16px;">Enter the batch code printed on your product jar to view its specific lab report, HPLC data, and origin certificate.</p>
+    <form action="/verify-purity" method="get" class="verify-form" style="max-width:440px;margin:0 auto;">
+      <input type="text" name="batch" th:value="${batch}" placeholder="Enter Batch Code (e.g. SN-2024-001)" required>
+      <button type="submit" class="btn-verify">Verify Purity</button>
+    </form>
+  </div>
+</div>
+
+<!-- Result -->
+<div th:if="${batch}" style="max-width:800px;margin:48px auto;padding:0 24px;">
+  <!-- Demo result card (in production, query real batch data) -->
+  <div style="background:white;border-radius:var(--radius-xl);padding:40px;box-shadow:var(--shadow-xl);border-top:4px solid var(--sage);">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
+      <div style="width:56px;height:56px;background:rgba(90,122,58,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--sage);">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--sage);font-weight:600;letter-spacing:1px;text-transform:uppercase;">Verified</div>
+        <h2 style="font-family:var(--font-display);font-size:24px;color:var(--forest);">Batch <span th:text="${batch}"></span></h2>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px;">
+      <div style="background:var(--warm);border-radius:10px;padding:16px;">
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Curcumin Content</div>
+        <div style="font-size:24px;font-weight:700;color:var(--forest);">9.5%</div>
+        <div style="font-size:12px;color:var(--sage);">Avg. market: 2-3%</div>
+      </div>
+      <div style="background:var(--warm);border-radius:10px;padding:16px;">
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Heavy Metals</div>
+        <div style="font-size:24px;font-weight:700;color:var(--sage);">ND</div>
+        <div style="font-size:12px;color:var(--text-muted);">None detected</div>
+      </div>
+      <div style="background:var(--warm);border-radius:10px;padding:16px;">
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Microbial</div>
+        <div style="font-size:24px;font-weight:700;color:var(--sage);">PASS</div>
+        <div style="font-size:12px;color:var(--text-muted);">E. Coli, Salmonella free</div>
+      </div>
+      <div style="background:var(--warm);border-radius:10px;padding:16px;">
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Origin</div>
+        <div style="font-size:18px;font-weight:700;color:var(--forest);">Maharashtra</div>
+        <div style="font-size:12px;color:var(--text-muted);">Heritage farm verified</div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;gap:16px;flex-wrap:wrap;">
+      <a href="#" class="btn-forest" style="font-size:13px;padding:10px 20px;">
+        <i class="fas fa-download"></i> Download Full COA Report
+      </a>
+      <a href="/shop" class="btn-outline" style="font-size:13px;padding:10px 20px;">Shop More Products</a>
+    </div>
+  </div>
+</div>
+
+<!-- How it works -->
+<div style="max-width:900px;margin:0 auto;padding:48px 24px;" th:if="${batch == null}">
+  <h2 class="section-title" style="text-align:center;">How to Find Your <em>Batch Code</em></h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:32px;" class="how-grid">
+    <div style="text-align:center;padding:28px;background:white;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);">
+      <div style="font-size:36px;margin-bottom:16px;">📦</div>
+      <h3 style="font-family:var(--font-display);color:var(--forest);margin-bottom:8px;">1. Find the Jar</h3>
+      <p style="font-size:14px;color:var(--text-muted);">Look at the bottom or back label of your Sarvasva Naturals product jar.</p>
+    </div>
+    <div style="text-align:center;padding:28px;background:white;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);">
+      <div style="font-size:36px;margin-bottom:16px;">🔍</div>
+      <h3 style="font-family:var(--font-display);color:var(--forest);margin-bottom:8px;">2. Locate the Code</h3>
+      <p style="font-size:14px;color:var(--text-muted);">Find the batch code printed in format SN-YYYY-XXX (e.g. SN-2024-001).</p>
+    </div>
+    <div style="text-align:center;padding:28px;background:white;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);">
+      <div style="font-size:36px;margin-bottom:16px;">✅</div>
+      <h3 style="font-family:var(--font-display);color:var(--forest);margin-bottom:8px;">3. Verify Above</h3>
+      <p style="font-size:14px;color:var(--text-muted);">Enter the code above to access your batch's full lab report instantly.</p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand"><div class="footer-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:60px;width:auto;object-fit:contain;"></div><p>Purity without compromise.</p></div>
+    <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="/shop">Shop All</a></li><li><a href="/our-process">Our Process</a></li></ul></div>
+    <div class="footer-links"><h4>Legal</h4><ul><li><a href="/privacy-policy">Privacy Policy</a></li></ul></div>
+    <div class="footer-links"><h4>Connect</h4><ul><li>Yogesh.saarth@gmail.com</li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Sarvasva Naturals</p></div>
+</footer>
+<style>@media(max-width:600px){.how-grid{grid-template-columns:1fr!important;}}</style>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

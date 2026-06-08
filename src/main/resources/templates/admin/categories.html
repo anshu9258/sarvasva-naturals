@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Categories | Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Sarvasva Naturals<br><span style="font-size:11px;color:var(--sage-lt);">Admin Panel</span></div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-box-open"></i> Products</a>
+      <a href="/admin/categories" class="active"><i class="fas fa-tags"></i> Categories</a>
+      <a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+      <a href="/admin/coupons"><i class="fas fa-percent"></i> Coupons</a>
+      <a href="/admin/reviews"><i class="fas fa-star"></i> Reviews</a>
+      <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);margin:16px 0;"></div>
+      <a href="/"><i class="fas fa-home"></i> View Store</a>
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Categories</h1>
+    </div>
+    <div th:if="${success}" style="background:#e8f5e9;border-radius:8px;padding:12px 16px;color:#1b5e20;margin-bottom:20px;"><i class="fas fa-check-circle"></i> <span th:text="${success}"></span></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
+      <!-- Add/Edit form -->
+      <div style="background:white;border-radius:12px;padding:28px;box-shadow:var(--shadow-sm);">
+        <h3 style="font-family:var(--font-display);font-size:18px;color:var(--forest);margin-bottom:20px;">Add New Category</h3>
+        <form action="/admin/categories/save" method="post">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <div class="form-group"><label class="form-label">Name *</label><input type="text" name="name" class="form-control" required placeholder="e.g. Cardamom"></div>
+          <div class="form-group"><label class="form-label">Slug</label><input type="text" name="slug" class="form-control" placeholder="auto-generated"></div>
+          <div class="form-group"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="3" placeholder="Brief description"></textarea></div>
+          <div class="form-group"><label class="form-label">Emoji Icon</label><input type="text" name="icon" class="form-control" placeholder="e.g. 💚" maxlength="4"></div>
+          <div class="form-group"><label class="form-label">Display Order</label><input type="number" name="displayOrder" class="form-control" value="0"></div>
+          <button type="submit" class="btn-forest"><i class="fas fa-plus"></i> Add Category</button>
+        </form>
+      </div>
+      <!-- Existing categories -->
+      <div class="data-table">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:600;color:var(--forest);">Existing Categories</div>
+        <table>
+          <thead><tr><th>Icon</th><th>Name</th><th>Slug</th><th>Products</th><th>Order</th></tr></thead>
+          <tbody>
+            <tr th:each="cat : ${categories}">
+              <td style="font-size:24px;" th:text="${cat.icon}">🌿</td>
+              <td style="font-weight:600;" th:text="${cat.name}"></td>
+              <td style="font-size:12px;color:var(--text-muted);" th:text="${cat.slug}"></td>
+              <td th:text="${cat.products.size()}"></td>
+              <td th:text="${cat.displayOrder}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

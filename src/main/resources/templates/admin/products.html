@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Products | Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Sarvasva Naturals<br><span style="font-size:11px;color:var(--sage-lt);font-family:var(--font-body);">Admin Panel</span></div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products" class="active"><i class="fas fa-box-open"></i> Products</a>
+      <a href="/admin/categories"><i class="fas fa-tags"></i> Categories</a>
+      <a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+      <a href="/admin/coupons"><i class="fas fa-percent"></i> Coupons</a>
+      <a href="/admin/reviews"><i class="fas fa-star"></i> Reviews</a>
+      <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);margin:16px 0;"></div>
+      <a href="/"><i class="fas fa-home"></i> View Store</a>
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Products</h1>
+      <a href="/admin/products/new" class="btn-forest"><i class="fas fa-plus"></i> Add Product</a>
+    </div>
+
+    <div th:if="${success}" style="background:#e8f5e9;border-radius:8px;padding:12px 16px;color:#1b5e20;margin-bottom:20px;">
+      <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+    </div>
+
+    <div class="data-table">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:center;">
+        <input type="text" placeholder="Search products..." id="productSearch"
+               style="padding:10px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none;flex:1;max-width:300px;">
+        <span style="font-size:14px;color:var(--text-muted);" th:text="${products.totalElements} + ' products'"></span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Image</th><th>Name</th><th>Category</th><th>Price</th>
+            <th>Stock</th><th>Status</th><th>Sales</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="p : ${products.content}">
+            <td>
+              <img th:src="${p.mainImageUrl}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;">
+            </td>
+            <td>
+              <div style="font-weight:600;font-size:14px;" th:text="${p.name}"></div>
+              <div style="font-size:12px;color:var(--text-muted);" th:text="${p.slug}"></div>
+            </td>
+            <td th:text="${p.category?.name}">—</td>
+            <td>
+              <div style="font-weight:600;" th:text="'₹'+${p.price}"></div>
+              <div style="font-size:12px;color:var(--text-muted);text-decoration:line-through;" th:if="${p.onSale}" th:text="'₹'+${p.originalPrice}"></div>
+            </td>
+            <td>
+              <span th:text="${p.stockQuantity}"
+                    th:style="${p.stockQuantity < 10}?'color:#c62828;font-weight:700':'color:var(--sage);font-weight:600'"></span>
+            </td>
+            <td>
+              <button th:id="'toggle-'+${p.id}"
+                      th:text="${p.active}?'Active':'Inactive'"
+                      th:class="${p.active}?'btn-sm edit':'btn-sm delete'"
+                      th:onclick="'toggleProduct('+${p.id}+',this)'"></button>
+            </td>
+            <td th:text="${p.soldCount}"></td>
+            <td>
+              <div class="action-btns">
+                <a th:href="@{/product/{s}(s=${p.slug})}" class="btn-sm view" target="_blank">View</a>
+                <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="btn-sm edit">Edit</a>
+                <form th:action="@{/admin/products/delete/{id}(id=${p.id})}" method="post" style="display:inline;"
+                      onsubmit="return confirmDelete('Delete this product?')">
+                  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                  <button type="submit" class="btn-sm delete">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- Pagination -->
+      <div class="pagination" th:if="${products.totalPages > 1}" style="padding:20px;">
+        <a th:each="i : ${#numbers.sequence(0,products.totalPages-1)}"
+           th:href="@{/admin/products(page=${i})}"
+           class="page-btn" th:classappend="${i==products.number}?'active'" th:text="${i+1}"></a>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js" defer></script>
+<script>
+document.getElementById('productSearch').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  document.querySelectorAll('tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+});
+</script>
+</body>
+</html>

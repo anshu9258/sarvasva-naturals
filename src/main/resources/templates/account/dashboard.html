@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>My Account | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/shop">Shop All</a></li>
+      <li><a href="/our-process">Our Process</a></li>
+      <li><a href="/lab-reports">Lab Reports</a></li>
+      <li><a href="/about">About Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i></a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div style="background:linear-gradient(135deg,#f5f0e8,#ede6d8);padding:40px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="breadcrumb"><a href="/">Home</a><span class="sep">/</span><span>My Account</span></div>
+    <h1 style="font-family:var(--font-display);font-size:32px;color:var(--forest);">
+      Welcome back, <em th:text="${user.firstName}">User</em>
+    </h1>
+  </div>
+</div>
+
+<div class="account-layout">
+  <!-- Sidebar -->
+  <aside class="account-sidebar">
+    <div class="account-user">
+      <div class="account-avatar"><i class="fas fa-user"></i></div>
+      <div class="account-name" th:text="${user.fullName}"></div>
+      <div class="account-email" th:text="${user.email}"></div>
+    </div>
+    <nav class="account-nav">
+      <a href="/account" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/account/orders"><i class="fas fa-box"></i> My Orders</a>
+      <a href="/account/profile"><i class="fas fa-user-edit"></i> Profile</a>
+      <a href="/logout" style="color:#c62828;margin-top:8px;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="account-main">
+    <!-- Stats row -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <div class="account-card" style="text-align:center;padding:24px;">
+        <div style="font-size:32px;font-weight:700;font-family:var(--font-display);color:var(--forest);" th:text="${#lists.size(recentOrders)}">0</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Total Orders</div>
+      </div>
+      <div class="account-card" style="text-align:center;padding:24px;">
+        <div style="font-size:32px;font-weight:700;font-family:var(--font-display);color:var(--forest);">✓</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Verified Customer</div>
+      </div>
+      <div class="account-card" style="text-align:center;padding:24px;">
+        <div style="font-size:32px;font-weight:700;font-family:var(--font-display);color:var(--forest);">🌿</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Purity Member</div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="account-card">
+      <h3>Recent Orders
+        <a href="/account/orders" style="font-size:14px;font-weight:400;color:var(--forest);">View all →</a>
+      </h3>
+      <div th:if="${#lists.isEmpty(recentOrders)}" style="text-align:center;padding:32px;color:var(--text-muted);">
+        <div style="font-size:40px;margin-bottom:12px;">📦</div>
+        <p>No orders yet. <a href="/shop" style="color:var(--forest);font-weight:600;">Start shopping</a></p>
+      </div>
+      <table style="width:100%;border-collapse:collapse;" th:if="${not #lists.isEmpty(recentOrders)}">
+        <thead>
+          <tr style="background:var(--warm);">
+            <th style="padding:12px;text-align:left;font-size:12px;letter-spacing:0.5px;color:var(--text-muted);">Order #</th>
+            <th style="padding:12px;text-align:left;font-size:12px;letter-spacing:0.5px;color:var(--text-muted);">Date</th>
+            <th style="padding:12px;text-align:left;font-size:12px;letter-spacing:0.5px;color:var(--text-muted);">Items</th>
+            <th style="padding:12px;text-align:right;font-size:12px;letter-spacing:0.5px;color:var(--text-muted);">Total</th>
+            <th style="padding:12px;text-align:center;font-size:12px;letter-spacing:0.5px;color:var(--text-muted);">Status</th>
+            <th style="padding:12px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="order : ${recentOrders}" style="border-bottom:1px solid var(--border);">
+            <td style="padding:14px 12px;font-weight:600;font-size:14px;" th:text="${order.orderNumber}"></td>
+            <td style="padding:14px 12px;font-size:13px;color:var(--text-muted);"
+                th:text="${#temporals.format(order.createdAt,'MMM dd, yyyy')}"></td>
+            <td style="padding:14px 12px;font-size:13px;" th:text="${order.items.size()} + ' item(s)'"></td>
+            <td style="padding:14px 12px;text-align:right;font-weight:600;" th:text="'₹'+${order.totalAmount}"></td>
+            <td style="padding:14px 12px;text-align:center;">
+              <span class="status-chip"
+                    th:classappend="'status-'+${order.status.name().toLowerCase()}"
+                    th:text="${order.status}"></span>
+            </td>
+            <td style="padding:14px 12px;">
+              <a th:href="@{/account/orders/{n}(n=${order.orderNumber})}"
+                 style="font-size:13px;color:var(--forest);font-weight:600;">View →</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top:60px;">
+  <div class="footer-bottom" style="max-width:1400px;margin:0 auto;border-top:none;padding-top:0;">
+    <p>© 2026 Sarvasva Naturals</p>
+  </div>
+</footer>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

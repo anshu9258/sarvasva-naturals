@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Reviews | Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Sarvasva Naturals<br><span style="font-size:11px;color:var(--sage-lt);">Admin Panel</span></div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-box-open"></i> Products</a>
+      <a href="/admin/categories"><i class="fas fa-tags"></i> Categories</a>
+      <a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+      <a href="/admin/coupons"><i class="fas fa-percent"></i> Coupons</a>
+      <a href="/admin/reviews" class="active"><i class="fas fa-star"></i> Reviews</a>
+      <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);margin:16px 0;"></div>
+      <a href="/"><i class="fas fa-home"></i> View Store</a>
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header"><h1>Customer Reviews</h1></div>
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr><th>Product</th><th>Customer</th><th>Rating</th><th>Review</th><th>Date</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="r : ${reviews}">
+            <td style="font-weight:600;font-size:13px;" th:text="${r.product.name}"></td>
+            <td style="font-size:13px;" th:text="${r.user.fullName}"></td>
+            <td style="color:#d4a853;">
+              <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                <th:block th:if="${i <= r.rating}">★</th:block>
+                <th:block th:unless="${i <= r.rating}">☆</th:block>
+              </th:block>
+            </td>
+            <td style="max-width:300px;">
+              <div style="font-weight:600;font-size:13px;" th:text="${r.title}"></div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:3px;" th:text="${r.comment}"></div>
+            </td>
+            <td style="font-size:12px;color:var(--text-muted);"
+                th:text="${#temporals.format(r.createdAt,'MMM dd, yyyy')}"></td>
+            <td>
+              <span th:if="${r.approved}"
+                    style="background:#e8f5e9;color:#1b5e20;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;">APPROVED</span>
+              <span th:unless="${r.approved}"
+                    style="background:#fff8e1;color:#f57f17;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;">PENDING</span>
+            </td>
+            <td>
+              <button th:onclick="'approveReview('+${r.id}+',this)'"
+                      th:class="${r.approved} ? 'btn-sm delete' : 'btn-sm edit'"
+                      th:text="${r.approved} ? 'Unapprove' : 'Approve'">
+              </button>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(reviews)}">
+            <td colspan="7" style="text-align:center;padding:48px;color:var(--text-muted);">
+              No reviews yet
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js" defer></script>
+<script>
+async function approveReview(id, btn) {
+  const res = await fetch(`/admin/reviews/${id}/approve`, { method: 'POST',
+    headers: { 'X-CSRF-TOKEN': document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] || '' }
+  });
+  const data = await res.json();
+  btn.textContent = data.approved ? 'Unapprove' : 'Approve';
+  btn.className = data.approved ? 'btn-sm delete' : 'btn-sm edit';
+  const badge = btn.closest('tr').querySelector('span');
+  if (data.approved) {
+    badge.textContent = 'APPROVED';
+    badge.style.cssText = 'background:#e8f5e9;color:#1b5e20;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;';
+  } else {
+    badge.textContent = 'PENDING';
+    badge.style.cssText = 'background:#fff8e1;color:#f57f17;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;';
+  }
+}
+</script>
+</body>
+</html>

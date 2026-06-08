@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Contact Us | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;max-width:1000px;margin:0 auto;padding:64px 24px;}
+    .contact-card{background:#f5f0e8;border-radius:14px;padding:24px;display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;}
+    .contact-icon{width:48px;height:48px;background:#1a2e0f;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#d4a853;font-size:18px;flex-shrink:0;}
+    @media(max-width:768px){.contact-grid{grid-template-columns:1fr;gap:32px;}}
+  </style>
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 We reply within 24 hours &nbsp;·&nbsp; Mon–Sat 9AM–6PM IST &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/shop">Shop All</a></li>
+      <li><a href="/our-process">Our Process</a></li>
+      <li><a href="/lab-reports">Lab Reports</a></li>
+      <li><a href="/about">About Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount > 0}?'display:flex':'display:none'"></span>
+      </a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div style="background:linear-gradient(135deg,#1a2e0f,#243b16);padding:64px 24px;text-align:center;">
+  <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8aab6a;margin-bottom:10px;">Get in Touch</div>
+  <h1 style="font-family:'Playfair Display',serif;font-size:48px;color:#fff;margin-bottom:12px;">Contact <em style="color:#d4a853;font-style:italic;">Us</em></h1>
+  <p style="color:rgba(255,255,255,0.65);font-size:16px;">We'd love to hear from you. Reach out for orders, feedback, or partnerships.</p>
+</div>
+
+<div class="contact-grid">
+  <!-- Contact Info -->
+  <div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:#1a2e0f;margin-bottom:28px;">We're Here to Help</h2>
+    <div class="contact-card">
+      <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+      <div>
+        <div style="font-weight:700;font-size:15px;color:#1a2e0f;margin-bottom:4px;">Email Us</div>
+        <div style="color:#555;font-size:14px;">Yogesh.saarth@gmail.com</div>
+        <div style="color:#888;font-size:12px;margin-top:3px;">We reply within 24 hours</div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon"><i class="fas fa-phone"></i></div>
+      <div>
+        <div style="font-weight:700;font-size:15px;color:#1a2e0f;margin-bottom:4px;">Call Us</div>
+        <div style="color:#555;font-size:14px;">+91 98687 26202</div>
+        <div style="color:#888;font-size:12px;margin-top:3px;">Mon–Sat, 9AM – 6PM IST</div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+      <div>
+        <div style="font-weight:700;font-size:15px;color:#1a2e0f;margin-bottom:4px;">WhatsApp</div>
+        <div style="color:#555;font-size:14px;">+91 98687 26202</div>
+        <div style="color:#888;font-size:12px;margin-top:3px;">Quick responses on WhatsApp</div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+      <div>
+        <div style="font-weight:700;font-size:15px;color:#1a2e0f;margin-bottom:4px;">Address</div>
+        <div style="color:#555;font-size:14px;">Mumbai, Maharashtra, India</div>
+        <div style="color:#888;font-size:12px;margin-top:3px;">Warehouse & Registered Office</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Form -->
+  <div style="background:white;border-radius:16px;padding:36px;box-shadow:0 8px 32px rgba(26,46,15,0.08);">
+    <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:#1a2e0f;margin-bottom:24px;">Send a Message</h3>
+    <form id="contactForm">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="form-group"><label class="form-label">Your Name</label><input type="text" class="form-control" placeholder="Arjun Sharma" required></div>
+        <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-control" placeholder="you@example.com" required></div>
+      </div>
+      <div class="form-group"><label class="form-label">Subject</label>
+        <select class="form-control">
+          <option>Order related query</option>
+          <option>Product information</option>
+          <option>Lab report request</option>
+          <option>Bulk / wholesale inquiry</option>
+          <option>Partnership / collaboration</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Message</label><textarea class="form-control" rows="5" placeholder="How can we help you?" required></textarea></div>
+      <button type="submit" class="btn-forest" style="width:100%;justify-content:center;font-size:15px;padding:14px;">
+        <i class="fas fa-paper-plane"></i> Send Message
+      </button>
+    </form>
+    <div id="formSuccess" style="display:none;background:#e8f5e9;border-radius:8px;padding:16px;text-align:center;margin-top:16px;color:#1b5e20;">
+      <i class="fas fa-check-circle" style="font-size:24px;margin-bottom:8px;display:block;"></i>
+      <strong>Message sent!</strong> We'll get back to you within 24 hours.
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand"><div class="footer-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:60px;width:auto;object-fit:contain;"></div><p>Purity without compromise.</p></div>
+    <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="/shop">Shop All</a></li><li><a href="/about">About Us</a></li></ul></div>
+    <div class="footer-links"><h4>Legal</h4><ul><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="#">Terms</a></li></ul></div>
+    <div class="footer-links"><h4>Connect</h4><ul><li>Yogesh.saarth@gmail.com</li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Sarvasva Naturals. Purity in Every Grain.</p></div>
+</footer>
+<script src="/js/main.js" defer></script>
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  this.style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+});
+</script>
+</body>
+</html>

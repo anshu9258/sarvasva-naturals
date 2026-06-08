@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Order Detail | Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">Sarvasva Naturals<br><span style="font-size:11px;color:var(--sage-lt);">Admin Panel</span></div>
+    <nav class="admin-nav">
+      <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/admin/products"><i class="fas fa-box-open"></i> Products</a>
+      <a href="/admin/orders" class="active"><i class="fas fa-shopping-cart"></i> Orders</a>
+      <a href="/admin/coupons"><i class="fas fa-percent"></i> Coupons</a>
+      <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);margin:16px 0;"></div>
+      <a href="/"><i class="fas fa-home"></i> View Store</a>
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <a href="/admin/orders" style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:4px;">← Back to Orders</a>
+        <h1 th:text="'Order #' + ${order.orderNumber}"></h1>
+      </div>
+      <span class="status-chip" style="font-size:14px;padding:10px 20px;"
+            th:classappend="'status-'+${order.status.name().toLowerCase()}"
+            th:text="${order.status}"></span>
+    </div>
+
+    <div th:if="${success}" style="background:#e8f5e9;border-radius:8px;padding:12px 16px;color:#1b5e20;margin-bottom:20px;">
+      <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- Items -->
+        <div style="background:white;border-radius:12px;padding:24px;box-shadow:var(--shadow-sm);">
+          <h3 style="font-family:var(--font-display);font-size:18px;color:var(--forest);margin-bottom:16px;">Order Items</h3>
+          <div th:each="item : ${order.items}"
+               style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);">
+            <img th:src="${item.product.mainImageUrl}"
+                 style="width:60px;height:60px;border-radius:8px;object-fit:cover;">
+            <div style="flex:1;">
+              <div style="font-weight:600;" th:text="${item.productName}"></div>
+              <div style="font-size:13px;color:var(--text-muted);" th:if="${item.selectedWeight}" th:text="${item.selectedWeight}"></div>
+              <div style="font-size:13px;color:var(--text-muted);" th:text="'Qty: '+${item.quantity} + ' × ₹'+${item.unitPrice}"></div>
+            </div>
+            <div style="font-weight:700;" th:text="'₹'+${item.subtotal}"></div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:12px;font-size:16px;font-weight:700;color:var(--forest);">
+            Total: ₹<span th:text="${order.totalAmount}"></span>
+          </div>
+        </div>
+
+        <!-- Update Status Form -->
+        <div style="background:white;border-radius:12px;padding:24px;box-shadow:var(--shadow-sm);">
+          <h3 style="font-family:var(--font-display);font-size:18px;color:var(--forest);margin-bottom:20px;">Update Order Status</h3>
+          <form th:action="@{/admin/orders/{id}/status(id=${order.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+              <div class="form-group">
+                <label class="form-label">Order Status</label>
+                <select name="status" class="form-control">
+                  <option th:each="s : ${statuses}" th:value="${s.name()}" th:text="${s.name()}"
+                          th:selected="${order.status==s}"></option>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;"
+                 id="trackingFields">
+              <div class="form-group">
+                <label class="form-label">Tracking Number</label>
+                <input type="text" name="trackingNumber" class="form-control" th:value="${order.trackingNumber}"
+                       placeholder="e.g. DXBE1234567890">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Courier Name</label>
+                <input type="text" name="courierName" class="form-control" th:value="${order.courierName}"
+                       placeholder="e.g. Delhivery, BlueDart">
+              </div>
+            </div>
+            <button type="submit" class="btn-forest">Update Order</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right panel -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="background:white;border-radius:12px;padding:24px;box-shadow:var(--shadow-sm);">
+          <h3 style="font-family:var(--font-display);font-size:16px;color:var(--forest);margin-bottom:16px;">Customer Info</h3>
+          <div style="font-weight:600;" th:text="${order.user?.fullName}"></div>
+          <div style="font-size:13px;color:var(--text-muted);" th:text="${order.user?.email}"></div>
+          <div style="font-size:13px;color:var(--text-muted);" th:text="${order.shippingPhone}"></div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:24px;box-shadow:var(--shadow-sm);">
+          <h3 style="font-family:var(--font-display);font-size:16px;color:var(--forest);margin-bottom:16px;">Shipping Address</h3>
+          <div style="font-size:14px;line-height:1.8;color:var(--text-muted);">
+            <div style="font-weight:600;color:var(--text);" th:text="${order.shippingName}"></div>
+            <div th:text="${order.shippingAddressLine1}"></div>
+            <div th:if="${order.shippingAddressLine2}" th:text="${order.shippingAddressLine2}"></div>
+            <div th:text="${order.shippingCity}+', '+${order.shippingState}+' - '+${order.shippingPincode}"></div>
+          </div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:24px;box-shadow:var(--shadow-sm);">
+          <h3 style="font-family:var(--font-display);font-size:16px;color:var(--forest);margin-bottom:16px;">Payment Details</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:var(--text-muted);">Method</span>
+              <span style="font-weight:600;" th:text="${order.paymentMethod}"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:var(--text-muted);">Status</span>
+              <span class="status-chip" style="font-size:11px;"
+                    th:classappend="${order.paymentStatus.name()=='PAID'}?'status-confirmed':'status-pending'"
+                    th:text="${order.paymentStatus}"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;" th:if="${order.paymentId}">
+              <span style="color:var(--text-muted);">Payment ID</span>
+              <span style="font-size:12px;font-family:monospace;" th:text="${#strings.abbreviate(order.paymentId,20)}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

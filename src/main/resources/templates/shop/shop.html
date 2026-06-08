@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Shop All Spices | Sarvasva Naturals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<!-- Reuse nav snippet -->
+<div class="announcement-bar"><div class="marquee"><span>🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp; Zero Toxins &nbsp;·&nbsp; Farm Direct &nbsp;·&nbsp; 🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/shop" class="active">Shop All</a></li>
+      <li><a href="/our-process">Our Process</a></li>
+      <li><a href="/lab-reports">Lab Reports</a></li>
+      <li><a href="/about">About Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" id="searchToggle"><i class="fas fa-search"></i></button>
+      <a href="/cart" class="cart-btn">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount > 0} ? 'display:flex' : 'display:none'">0</span>
+      </a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="search-bar" id="searchBar">
+    <form action="/search" method="get" class="search-form">
+      <input type="text" name="q" placeholder="Search spices...">
+      <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
+    <button class="search-close" id="searchClose"><i class="fas fa-times"></i></button>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<div style="background:linear-gradient(135deg,#f5f0e8,#ede6d8);padding:48px 24px;text-align:center;">
+  <div class="section-label">Our Collection</div>
+  <h1 class="section-title">Shop All <em>Spices</em></h1>
+  <p style="color:var(--text-muted);max-width:500px;margin:0 auto;">Every product is lab-certified, farm-traced, and batch-verified for purity.</p>
+</div>
+
+<div class="shop-layout">
+  <!-- Sidebar -->
+  <aside class="shop-sidebar">
+    <div class="filter-section">
+      <h4>Categories</h4>
+      <div th:each="cat : ${categories}" class="filter-option">
+        <input type="radio" name="category" th:id="${cat.slug}" th:value="${cat.slug}"
+               th:checked="${activeCategory == cat.slug}"
+               onchange="location.href='/category/'+this.value">
+        <label th:for="${cat.slug}" th:text="${cat.name}"></label>
+      </div>
+      <div class="filter-option">
+        <input type="radio" name="category" id="all" value="" th:checked="${activeCategory == null}"
+               onchange="location.href='/shop'">
+        <label for="all">All Products</label>
+      </div>
+    </div>
+    <div class="filter-section">
+      <h4>Sort By</h4>
+      <div th:each="sortOpt : ${ {'default','price_asc','price_desc','rating','newest','bestseller'} }" class="filter-option">
+        <input type="radio" name="sort" th:id="${sortOpt}" th:value="${sortOpt}"
+               th:checked="${currentSort == sortOpt}"
+               th:onchange="'location.href=\'/shop?sort='+sortOpt+'\''">>
+        <label th:for="${sortOpt}"
+               th:text="${sortOpt == 'default' ? 'Recommended' : sortOpt == 'price_asc' ? 'Price: Low to High' : sortOpt == 'price_desc' ? 'Price: High to Low' : sortOpt == 'rating' ? 'Top Rated' : sortOpt == 'newest' ? 'Newest First' : 'Best Sellers'}"></label>
+      </div>
+    </div>
+    <div class="filter-section">
+      <h4>Quality Marks</h4>
+      <div class="filter-option"><input type="checkbox" id="hplc"><label for="hplc">HPLC Verified</label></div>
+      <div class="filter-option"><input type="checkbox" id="organic"><label for="organic">Certified Organic</label></div>
+      <div class="filter-option"><input type="checkbox" id="notoxins"><label for="notoxins">Zero Toxins</label></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main>
+    <div class="shop-toolbar">
+      <span class="results-count">
+        Showing <strong th:text="${products.numberOfElements}">0</strong> of
+        <strong th:text="${products.totalElements}">0</strong> products
+      </span>
+      <select class="sort-select" onchange="location.href='/shop?sort='+this.value">
+        <option value="default"     th:selected="${currentSort=='default'}">Recommended</option>
+        <option value="price_asc"   th:selected="${currentSort=='price_asc'}">Price: Low to High</option>
+        <option value="price_desc"  th:selected="${currentSort=='price_desc'}">Price: High to Low</option>
+        <option value="rating"      th:selected="${currentSort=='rating'}">Top Rated</option>
+        <option value="bestseller"  th:selected="${currentSort=='bestseller'}">Best Sellers</option>
+        <option value="newest"      th:selected="${currentSort=='newest'}">Newest</option>
+      </select>
+    </div>
+
+    <div class="products-grid" th:if="${not #lists.isEmpty(products.content)}">
+      <div th:each="product : ${products.content}" class="product-card">
+        <div class="product-card-img">
+          <a th:href="@{/product/{s}(s=${product.slug})}">
+            <img th:src="${product.mainImageUrl}" th:alt="${product.name}" loading="lazy">
+          </a>
+          <div class="product-badge" th:if="${product.bestSeller}">
+            <i class="fas fa-flask" style="font-size:9px;"></i> Lab Tested
+          </div>
+          <div class="product-badge sale" th:if="${product.onSale}"
+               th:text="${product.discountPercent}+'% OFF'"></div>
+        </div>
+        <div class="product-card-body">
+          <div class="product-origin" th:text="${product.origin}"></div>
+          <a th:href="@{/product/{s}(s=${product.slug})}">
+            <div class="product-name" th:text="${product.name}"></div>
+          </a>
+          <div class="product-rating">
+            <span class="stars">
+              <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                <i th:class="${i <= product.averageRating} ? 'fas fa-star' : 'far fa-star'"></i>
+              </th:block>
+            </span>
+            <span th:text="'('+${product.reviewCount}+')'"></span>
+          </div>
+          <div class="product-price-row">
+            <span class="product-price" th:text="'₹'+${product.price}"></span>
+            <span class="product-price-original" th:if="${product.onSale}" th:text="'₹'+${product.originalPrice}"></span>
+          </div>
+          <button class="add-to-cart-btn" th:data-product-id="${product.id}"
+                  th:disabled="${product.stockQuantity==0}">
+            <i class="fas fa-shopping-bag"></i>
+            <span th:text="${product.stockQuantity>0}?'Add to Cart':'Out of Stock'">Add to Cart</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div th:if="${#lists.isEmpty(products.content)}" style="text-align:center;padding:80px 24px;">
+      <div style="font-size:64px;margin-bottom:16px;">🔍</div>
+      <h3 style="font-family:var(--font-display);color:var(--forest);margin-bottom:8px;">No products found</h3>
+      <p style="color:var(--text-muted);">Try adjusting your filters or <a href="/shop" style="color:var(--forest);font-weight:600;">browse all products</a></p>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" th:if="${products.totalPages > 1}">
+      <a th:if="${products.hasPrevious()}"
+         th:href="@{/shop(page=${products.number-1},sort=${currentSort})}"
+         class="page-btn"><i class="fas fa-chevron-left"></i></a>
+      <th:block th:each="i : ${#numbers.sequence(0, products.totalPages-1)}">
+        <a th:href="@{/shop(page=${i},sort=${currentSort})}"
+           class="page-btn" th:classappend="${i==products.number}?'active'"
+           th:text="${i+1}"></a>
+      </th:block>
+      <a th:if="${products.hasNext()}"
+         th:href="@{/shop(page=${products.number+1},sort=${currentSort})}"
+         class="page-btn"><i class="fas fa-chevron-right"></i></a>
+    </div>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand"><div class="footer-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:40px;width:auto;filter:brightness(0) invert(1);object-fit:contain;"></div><p>Premium Ayurvedic spices. Purity without compromise.</p></div>
+    <div class="footer-links"><h4>Shop</h4><ul><li><a href="/shop">All Products</a></li><li><a href="/our-process">Our Process</a></li><li><a href="/lab-reports">Lab Reports</a></li></ul></div>
+    <div class="footer-links"><h4>Legal</h4><ul><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="#">Terms</a></li><li><a href="#">Returns</a></li></ul></div>
+    <div class="footer-links"><h4>Connect</h4><ul><li>Yogesh.saarth@gmail.com</li><li>+91 98687 26202</li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Sarvasva Naturals</p><span class="payment-text">GPay · PhonePe · UPI · Cards · COD</span></div>
+</footer>
+
+<div class="cart-toast" id="cartToast"><i class="fas fa-check-circle"></i><span>Added to cart!</span><a href="/cart" class="toast-view">View Cart →</a></div>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

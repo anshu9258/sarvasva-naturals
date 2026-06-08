@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Checkout | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🔒 Secure Checkout &nbsp;·&nbsp; 100% Safe Payment &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar" style="border-bottom:1px solid var(--border);">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <div style="display:flex;align-items:center;gap:24px;margin-left:auto;font-size:13px;color:var(--text-muted);">
+      <span><i class="fas fa-lock" style="color:var(--sage);"></i> Secure Checkout</span>
+    </div>
+  </div>
+</nav>
+
+<div style="max-width:1100px;margin:0 auto;padding:24px 24px 8px;">
+  <div class="breadcrumb">
+    <a href="/cart"><i class="fas fa-arrow-left"></i> Back to Cart</a>
+    <span class="sep">/</span><span>Checkout</span>
+  </div>
+  <h1 style="font-family:var(--font-display);font-size:32px;color:var(--forest);">Checkout</h1>
+</div>
+
+<form action="/checkout/place-order" method="post" id="checkoutForm">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  <input type="hidden" name="couponCode" id="couponCodeHidden">
+
+  <div class="checkout-page">
+    <div>
+      <!-- Step 1: Delivery Address -->
+      <div class="checkout-section">
+        <h3><span>1</span> Delivery Address</h3>
+        <div th:each="address : ${addresses}" class="address-card"
+             th:classappend="${address.isDefault}?'selected'">
+          <input type="radio" name="addressId" th:value="${address.id}"
+                 th:checked="${address.isDefault}" required>
+          <div>
+            <div class="address-label" th:text="${address.type}">HOME</div>
+            <div style="font-weight:600;font-size:15px;" th:text="${address.fullName}"></div>
+            <div class="address-text" th:text="${address.formattedAddress}"></div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:4px;" th:text="${address.phone}"></div>
+          </div>
+        </div>
+        <button type="button" class="add-address-btn" onclick="showAddressForm()">
+          <i class="fas fa-plus"></i> Add New Address
+        </button>
+        <!-- Add address form (hidden by default) -->
+        <div id="newAddressForm" style="display:none;margin-top:20px;border:1.5px solid var(--border);border-radius:12px;padding:20px;">
+          <h4 style="font-family:var(--font-display);margin-bottom:16px;font-size:16px;">New Delivery Address</h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group"><label class="form-label">Full Name</label><input type="text" id="na_fullName" class="form-control" placeholder="Arjun Sharma"></div>
+            <div class="form-group"><label class="form-label">Phone</label><input type="text" id="na_phone" class="form-control" placeholder="+91 98687 26202"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Address Line 1</label><input type="text" id="na_line1" class="form-control" placeholder="House No, Street, Area"></div>
+          <div class="form-group"><label class="form-label">Address Line 2 (optional)</label><input type="text" id="na_line2" class="form-control" placeholder="Landmark"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+            <div class="form-group"><label class="form-label">City</label><input type="text" id="na_city" class="form-control" placeholder="Mumbai"></div>
+            <div class="form-group"><label class="form-label">State</label>
+              <select id="na_state" class="form-control">
+                <option>Andhra Pradesh</option><option>Delhi</option><option>Gujarat</option><option>Karnataka</option>
+                <option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Rajasthan</option>
+                <option>Tamil Nadu</option><option>Telangana</option><option>Uttar Pradesh</option><option>West Bengal</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Pincode</label><input type="text" id="na_pincode" class="form-control" placeholder="400001" maxlength="6"></div>
+          </div>
+          <button type="button" class="btn-forest" onclick="saveAddress()" style="margin-right:12px;">Save Address</button>
+          <button type="button" class="btn-outline" onclick="document.getElementById('newAddressForm').style.display='none'">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Payment Method -->
+      <div class="checkout-section">
+        <h3><span>2</span> Payment Method</h3>
+        <div class="payment-options">
+          <label class="payment-option selected">
+            <input type="radio" name="paymentMethod" value="RAZORPAY" checked>
+            <div class="payment-option-icon">🏦</div>
+            <div class="payment-option-info">
+              <strong>Razorpay</strong>
+              <span>UPI, Net Banking, Cards, Wallets</span>
+            </div>
+            <div class="payment-option-badge">Recommended</div>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="STRIPE">
+            <div class="payment-option-icon">💳</div>
+            <div class="payment-option-info">
+              <strong>Credit / Debit Card</strong>
+              <span>Visa, Mastercard, AmEx</span>
+            </div>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="COD">
+            <div class="payment-option-icon">💵</div>
+            <div class="payment-option-info">
+              <strong>Cash on Delivery</strong>
+              <span>Pay when your order arrives</span>
+            </div>
+            <div class="payment-option-badge" style="background:#fff8e1;color:#f57f17;">+₹30 fee</div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary Sidebar -->
+    <div>
+      <div class="cart-summary" style="position:sticky;top:calc(var(--nav-h)+24px);">
+        <h3>Order Summary</h3>
+        <div th:each="item : ${cart.items}" style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+          <img th:src="${item.product.mainImageUrl}" style="width:52px;height:52px;border-radius:8px;object-fit:cover;" th:alt="${item.product.name}">
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:500;" th:text="${item.product.name}"></div>
+            <div style="font-size:12px;color:var(--text-muted);" th:if="${item.selectedWeight}" th:text="${item.selectedWeight}"></div>
+            <div style="font-size:13px;color:var(--text-muted);" th:text="'Qty: ' + ${item.quantity}"></div>
+          </div>
+          <div style="font-weight:600;font-size:15px;" th:text="'₹'+${item.subtotal}"></div>
+        </div>
+        <div class="coupon-form">
+          <input type="text" id="couponInput" placeholder="Promo / Coupon code">
+          <button type="button" onclick="applyCheckoutCoupon()">Apply</button>
+        </div>
+        <div class="summary-line">
+          <span>Subtotal</span>
+          <span th:text="'₹'+${cart.subtotal}"></span>
+        </div>
+        <div class="summary-line">
+          <span>Shipping</span>
+          <span th:text="${cart.subtotal.compareTo(new java.math.BigDecimal('999'))>=0}?'FREE':'₹99'"></span>
+        </div>
+        <div class="summary-line">
+          <span>GST (18%)</span>
+          <span th:text="'₹'+${cart.subtotal.multiply(new java.math.BigDecimal('0.18')).setScale(2,T(java.math.RoundingMode).HALF_UP)}"></span>
+        </div>
+        <div class="summary-line total">
+          <span>Total</span>
+          <span th:text="'₹'+${cart.subtotal.add(cart.subtotal.compareTo(new java.math.BigDecimal('999'))>=0?T(java.math.BigDecimal).ZERO:new java.math.BigDecimal('99')).add(cart.subtotal.multiply(new java.math.BigDecimal('0.18')).setScale(2,T(java.math.RoundingMode).HALF_UP))}"></span>
+        </div>
+        <div id="addressError" style="display:none;background:#ffebee;border-radius:8px;padding:10px 14px;color:#c62828;font-size:13px;margin-top:12px;">
+          ⚠️ Please add and select a delivery address before placing your order.
+        </div>
+        <button type="button" onclick="submitCheckout()" class="btn-forest" style="width:100%;justify-content:center;display:flex;margin-top:16px;font-size:16px;padding:16px;">
+          <i class="fas fa-lock"></i> &nbsp; Place Order
+        </button>
+        <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);">
+          🔒 256-bit SSL secured · Your data is safe
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script src="/js/main.js" defer></script>
+<script>
+// Read CSRF token from the hidden field already in the form
+function getCsrfToken() {
+  const el = document.querySelector('input[name="_csrf"]');
+  return el ? el.value : '';
+}
+function getCsrfHeader() {
+  const meta = document.querySelector('meta[name="_csrf_header"]');
+  return meta ? meta.content : 'X-CSRF-TOKEN';
+}
+
+function showAddressForm() {
+  document.getElementById('newAddressForm').style.display = 'block';
+}
+
+function submitCheckout() {
+  const addressSelected = document.querySelector('input[name="addressId"]:checked');
+  const errDiv = document.getElementById('addressError');
+  if (!addressSelected) {
+    errDiv.style.display = 'block';
+    document.querySelector('.checkout-section').scrollIntoView({behavior:'smooth'});
+    return;
+  }
+  errDiv.style.display = 'none';
+  document.getElementById('checkoutForm').submit();
+}
+
+function applyCheckoutCoupon() {
+  const code = document.getElementById('couponInput').value.trim();
+  if (code) document.getElementById('couponCodeHidden').value = code;
+}
+
+async function saveAddress() {
+  const fullName = document.getElementById('na_fullName').value.trim();
+  const phone = document.getElementById('na_phone').value.trim();
+  const line1 = document.getElementById('na_line1').value.trim();
+  const city = document.getElementById('na_city').value.trim();
+  const pincode = document.getElementById('na_pincode').value.trim();
+  if (!fullName || !phone || !line1 || !city || !pincode) {
+    alert('Please fill in all required fields (Full Name, Phone, Address, City, Pincode).');
+    return;
+  }
+  const body = {
+    fullName:    fullName,
+    phone:       phone,
+    addressLine1:line1,
+    addressLine2:document.getElementById('na_line2').value,
+    city:        city,
+    state:       document.getElementById('na_state').value,
+    pincode:     pincode
+  };
+  try {
+    const res = await fetch('/checkout/address/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': getCsrfToken()
+      },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) { location.reload(); }
+      else { alert('Could not save address. Please try again.'); }
+    } else {
+      alert('Server error saving address (status ' + res.status + '). Please try again.');
+    }
+  } catch (e) { alert('Failed to save address: ' + e.message); }
+}
+</script>
+</body>
+</html>

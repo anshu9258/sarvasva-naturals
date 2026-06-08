@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Our Process | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    html { scroll-padding-top: 110px; scroll-behavior: smooth; }
+    section[id], div[id] { scroll-margin-top: 110px; }
+    .advisor-card{
+      max-width:350px;
+      margin:0 auto;
+      background:#fff;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 8px 25px rgba(0,0,0,0.08);
+  }
+
+  .advisor-img{
+      width:100%;
+      height:220px;
+      object-fit:contain;
+      display:block;
+      background:#f8f8f8;
+  }
+
+  .advisor-info{
+      padding:20px;
+      text-align:center;
+  }
+  </style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 HPLC Verified &nbsp;·&nbsp; Zero Toxins &nbsp;·&nbsp; Farm Direct &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/shop">Shop All</a></li>
+      <li><a href="/our-process" class="active">Our Process</a></li>
+      <li><a href="/lab-reports">Lab Reports</a></li>
+      <li><a href="/about">About Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount>0}?'display:flex':'display:none'"></span>
+      </a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div style="background:linear-gradient(135deg,var(--forest) 0%,#243b16 100%);padding:80px 24px;text-align:center;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1599789197514-47270cd526b4?w=1400&q=50')center/cover;opacity:0.08;"></div>
+  <div style="position:relative;z-index:2;">
+    <div class="section-label" style="color:var(--sage-lt);">The Genesis</div>
+    <h1 class="section-title" style="color:white;max-width:700px;margin:0 auto 20px;">Closing the <em>Purity Gap</em><br>in Indian Spices.</h1>
+    <p style="color:rgba(255,255,255,0.7);max-width:580px;margin:0 auto;font-size:16px;line-height:1.8;">Sarvasva Naturals was born from a singular, unsettling realisation: the very spices meant to heal were being compromised by industrial shortcuts. Founded to restore the sacred bond between the farm and the kitchen, we've replaced ambiguity with empirical evidence.</p>
+    <div style="margin-top:24px;padding:16px 24px;border-left:3px solid var(--gold);background:rgba(212,168,83,0.08);border-radius:0 8px 8px 0;max-width:400px;margin:24px auto 0;text-align:left;">
+      <p style="color:var(--gold-lt);font-style:italic;font-family:var(--font-elegant);font-size:17px;">"Our mission isn't just organic; it's clinical transparency."</p>
+    </div>
+  </div>
+</div>
+
+<!-- The Clinical Benchmark -->
+<div style="background:var(--warm);padding:72px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-label text-center" style="text-align:center;">The Clinical Benchmark</div>
+    <h2 class="section-title" style="text-align:center;">Every batch undergoes a rigorous 5-step<br><em>validation protocol</em></h2>
+    <div class="process-steps">
+      <div class="process-step" data-step="01">
+        <div class="step-icon"><i class="fas fa-map-marked-alt"></i></div>
+        <h3>01. Origin Mapping</h3>
+        <p>Direct sourcing from heritage farms using blockchain to track soil health and crop rotation cycles.</p>
+      </div>
+      <div class="process-step" data-step="02">
+        <div class="step-icon"><i class="fas fa-atom"></i></div>
+        <h3>02. Metal Screening</h3>
+        <p>ICP-MS testing to ensure Lead, Arsenic, and Cadmium levels are significantly below FDA/FSSAI limits.</p>
+      </div>
+      <div class="process-step" data-step="03">
+        <div class="step-icon"><i class="fas fa-microscope"></i></div>
+        <h3>03. Microbial Purity</h3>
+        <p>Strict screening for Salmonella, E. Coli, and Yeast/Mold using advanced PCR molecular diagnostics.</p>
+      </div>
+      <div class="process-step" data-step="04">
+        <div class="step-icon"><i class="fas fa-flask"></i></div>
+        <h3>04. Bioactive Potency</h3>
+        <p>We don't just test for safety; we measure the active therapeutic compounds like Curcumin and Piperine.</p>
+      </div>
+      <div class="process-step" data-step="05" style="background:var(--forest);color:white;">
+        <div class="step-icon" style="background:rgba(255,255,255,0.1);color:var(--gold);"><i class="fas fa-qrcode"></i></div>
+        <h3 style="color:white;">05. Digital Certification</h3>
+        <p style="color:rgba(255,255,255,0.7);">Every single jar features a unique batch code linked to its specific laboratory analysis report, accessible instantly.</p>
+        <a href="/verify-purity" class="btn-outline-white" style="display:inline-flex;margin-top:16px;font-size:13px;padding:10px 20px;">Verify Your Batch</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Medical Advisory Board -->
+<div class="section" style="max-width:1100px;margin:0 auto;padding:72px 24px;">
+
+    <div class="section-label" style="text-align:center;">
+        Governance
+    </div>
+
+    <h2 class="section-title" style="text-align:center;">
+        The Medical <em>Advisory Board</em>
+    </h2>
+
+    <p class="section-sub" style="text-align:center;margin:0 auto 48px;">
+        Our quality standards are defined by clinical experts who bridge the gap between traditional Ayurveda and modern medicine.
+    </p>
+
+    <div class="advisor-card">
+        <img src="/images/dr-yogesh-wankhede.jpg"
+             alt="Dr. Yogesh Wankhede"
+             class="advisor-img">
+             
+
+        <div class="advisor-info">
+            <div class="advisor-name">
+                Dr. Yogesh Wankhede
+            </div>
+
+            <div class="advisor-title">
+                Ayurvedic Wellness Expert
+            </div>
+
+            <p class="advisor-desc">
+                Dedicated to delivering lab-verified Ayurvedic products that meet pharmaceutical-grade quality standards.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- CTA -->
+<div style="background:var(--cream-dk);padding:72px 24px;text-align:center;">
+  <div style="font-size:48px;margin-bottom:16px;"><i class="fas fa-file-alt" style="color:var(--gold);"></i></div>
+  <h2 class="section-title">Uncompromising <em>Proof.</em></h2>
+  <p style="color:var(--text-muted);max-width:480px;margin:0 auto 32px;">Transparency shouldn't be a request. We provide a comprehensive Certificate of Analysis (COA) for every single product we sell.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+    <a href="/lab-reports" class="btn-forest"><i class="fas fa-download"></i> View Sample Report</a>
+    <a href="/shop" class="btn-outline">Explore the Shop</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand"><div class="footer-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:60px;width:auto;"></div><p>Purity without compromise.</p></div>
+    <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="/shop">Shop All</a></li><li><a href="/our-process">Our Process</a></li><li><a href="/lab-reports">Lab Reports</a></li></ul></div>
+    <div class="footer-links"><h4>Legal</h4><ul><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="#">Terms</a></li><li><a href="#">Returns</a></li></ul></div>
+    <div class="footer-links"><h4>Connect</h4><ul><li>Yogesh.saarth@gmail.com</li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Sarvasva Naturals</p></div>
+</footer>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

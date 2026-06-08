@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Cart | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/shop">Shop All</a></li>
+      <li><a href="/our-process">Our Process</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/cart" class="cart-btn">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount>0}?'display:flex':'display:none'"></span>
+      </a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div style="max-width:1400px;margin:0 auto;padding:24px 24px 8px;">
+  <div class="breadcrumb"><a href="/">Home</a><span class="sep">/</span><span>Cart</span></div>
+  <h1 style="font-family:var(--font-display);font-size:36px;color:var(--forest);margin-bottom:0;">
+    Your Cart
+    <span th:if="${cart.totalItems > 0}" style="font-size:18px;color:var(--text-muted);font-weight:400;" th:text="'(' + ${cart.totalItems} + ' items)'"></span>
+  </h1>
+</div>
+
+<div class="cart-page" th:if="${cart.totalItems > 0}">
+  <!-- Cart Items -->
+  <div>
+    <div class="cart-table">
+      <div class="cart-table-head">
+        <span>Product</span><span style="text-align:center;">Quantity</span>
+        <span style="text-align:right;">Total</span><span></span>
+      </div>
+      <div th:each="item : ${cart.items}" class="cart-item-row">
+        <div class="cart-item-info">
+          <img th:src="${item.product.mainImageUrl}" th:alt="${item.product.name}" class="cart-item-img">
+          <div>
+            <a th:href="@{/product/{s}(s=${item.product.slug})}">
+              <div class="cart-item-name" th:text="${item.product.name}"></div>
+            </a>
+            <div class="cart-item-variant" th:if="${item.selectedWeight}" th:text="'Size: ' + ${item.selectedWeight}"></div>
+            <div class="cart-item-variant" th:text="'₹' + ${item.priceAtAdd} + ' each'"></div>
+          </div>
+        </div>
+        <div>
+          <div class="qty-control">
+            <button class="qty-btn qty-minus">−</button>
+            <input type="number" class="qty-input cart-qty-input"
+                   th:value="${item.quantity}" min="1" max="99"
+                   th:data-item-id="${item.id}">
+            <button class="qty-btn qty-plus">+</button>
+          </div>
+        </div>
+        <div class="cart-item-price" style="text-align:right;" th:text="'₹' + ${item.subtotal}"></div>
+        <button class="cart-remove-btn" th:data-item-id="${item.id}" title="Remove">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Continue shopping -->
+    <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <a href="/shop" class="btn-outline"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="cart-summary">
+    <h3>Order Summary</h3>
+    <div th:if="${cart.subtotal.compareTo(new java.math.BigDecimal('999')) < 0}" class="shipping-note">
+      <i class="fas fa-truck"></i> Add ₹<span th:text="${new java.math.BigDecimal('999').subtract(cart.subtotal)}"></span> more for free shipping!
+    </div>
+    <div th:if="${cart.subtotal.compareTo(new java.math.BigDecimal('999')) >= 0}" class="shipping-note" style="background:rgba(90,122,58,0.15);">
+      <i class="fas fa-check-circle"></i> You qualify for FREE shipping! 🎉
+    </div>
+    <div class="summary-line">
+      <span>Subtotal (<span th:text="${cart.totalItems}"></span> items)</span>
+      <span th:text="'₹' + ${cart.subtotal}"></span>
+    </div>
+    <div class="summary-line">
+      <span>Shipping</span>
+      <span th:text="${cart.subtotal.compareTo(new java.math.BigDecimal('999'))>=0}?'FREE':'₹99'"></span>
+    </div>
+    <div class="summary-line">
+      <span>GST (18%)</span>
+      <span th:text="'₹' + ${cart.subtotal.multiply(new java.math.BigDecimal('0.18')).setScale(2, T(java.math.RoundingMode).HALF_UP)}"></span>
+    </div>
+    <!-- Coupon -->
+    <div class="coupon-form">
+      <input type="text" id="couponInput" placeholder="Promo code">
+      <button type="button" onclick="applyCoupon()">Apply</button>
+    </div>
+    <div class="summary-line total">
+      <span>Total</span>
+      <span id="cartSubtotal" th:text="'₹' + ${cart.subtotal}"></span>
+    </div>
+    <a href="/checkout" class="btn-forest" style="width:100%;justify-content:center;margin-top:16px;display:flex;">
+      Proceed to Checkout <i class="fas fa-arrow-right"></i>
+    </a>
+    <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--text-muted);">
+      <i class="fas fa-lock"></i> Secure checkout · GPay · UPI · Cards · COD
+    </div>
+  </div>
+</div>
+
+<!-- Empty Cart -->
+<div th:if="${cart.totalItems == 0}" style="text-align:center;padding:80px 24px;max-width:500px;margin:0 auto;">
+  <div style="font-size:72px;margin-bottom:24px;">🛒</div>
+  <h2 style="font-family:var(--font-display);color:var(--forest);margin-bottom:12px;">Your cart is empty</h2>
+  <p style="color:var(--text-muted);margin-bottom:32px;">Discover our pure, lab-verified spice collection and add your favourites.</p>
+  <a href="/shop" class="btn-primary">Browse Products <i class="fas fa-arrow-right"></i></a>
+</div>
+
+<footer class="footer" style="margin-top:60px;">
+  <div class="footer-bottom" style="max-width:1400px;margin:0 auto;border-top:none;padding-top:0;">
+    <p>© 2026 Sarvasva Naturals</p>
+    <span class="payment-text">GPay · PhonePe · UPI · Cards · COD</span>
+  </div>
+</footer>
+
+<div class="cart-toast" id="cartToast"><i class="fas fa-check-circle"></i><span>Cart updated!</span></div>
+<script src="/js/main.js" defer></script>
+<script>
+function applyCoupon() {
+  const code = document.getElementById('couponInput').value.trim();
+  if (code) {
+    sessionStorage.setItem('couponCode', code);
+    const n = document.createElement('div');
+    n.className = 'flash-message flash-success';
+    n.style.cssText = 'position:fixed;top:100px;right:24px;z-index:9999;';
+    n.innerHTML = '<i class="fas fa-check-circle"></i><span>Coupon saved! Applied at checkout.</span>';
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 3000);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>My Orders | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 Track your order below &nbsp;·&nbsp; Need help? Email Yogesh.saarth@gmail.com &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <div class="nav-actions">
+      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i></a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div style="background:linear-gradient(135deg,#f5f0e8,#ede6d8);padding:40px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="breadcrumb"><a href="/account">My Account</a><span class="sep">/</span><span>Orders</span></div>
+    <h1 style="font-family:var(--font-display);font-size:32px;color:var(--forest);">My Orders</h1>
+  </div>
+</div>
+
+<div class="account-layout">
+  <aside class="account-sidebar">
+    <div class="account-user">
+      <div class="account-avatar"><i class="fas fa-user"></i></div>
+      <div class="account-name" th:text="${user.fullName}"></div>
+      <div class="account-email" th:text="${user.email}"></div>
+    </div>
+    <nav class="account-nav">
+      <a href="/account"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="/account/orders" class="active"><i class="fas fa-box"></i> My Orders</a>
+      <a href="/account/profile"><i class="fas fa-user-edit"></i> Profile</a>
+      <a href="/logout" style="color:#c62828;margin-top:8px;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="account-main">
+    <div class="account-card">
+      <h3>Order History</h3>
+
+      <div th:if="${orders.empty}" style="text-align:center;padding:48px;color:var(--text-muted);">
+        <div style="font-size:48px;margin-bottom:16px;">📦</div>
+        <p style="margin-bottom:20px;">You haven't placed any orders yet.</p>
+        <a href="/shop" class="btn-forest">Start Shopping</a>
+      </div>
+
+      <div th:each="order : ${orders.content}" style="border:1.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+          <div>
+            <div style="font-weight:700;font-size:16px;color:var(--forest);" th:text="'Order #' + ${order.orderNumber}"></div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:4px;"
+                 th:text="${#temporals.format(order.createdAt,'MMMM dd, yyyy · h:mm a')}"></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <span class="status-chip"
+                  th:classappend="'status-'+${order.status.name().toLowerCase()}"
+                  th:text="${order.status}"></span>
+            <span class="status-chip"
+                  th:classappend="${order.paymentStatus.name()=='PAID'}?'status-confirmed':'status-pending'"
+                  th:text="${order.paymentStatus}"></span>
+          </div>
+        </div>
+
+        <!-- Items preview -->
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+          <div th:each="item, iter : ${order.items}" th:if="${iter.index < 3}"
+               style="display:flex;align-items:center;gap:8px;background:var(--warm);border-radius:8px;padding:8px 12px;">
+            <img th:src="${item.product.mainImageUrl}" style="width:32px;height:32px;border-radius:6px;object-fit:cover;">
+            <span style="font-size:13px;" th:text="${item.productName}"></span>
+            <span style="font-size:12px;color:var(--text-muted);" th:text="'×'+${item.quantity}"></span>
+          </div>
+          <div th:if="${order.items.size() > 3}"
+               style="background:var(--warm);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text-muted);">
+            +<span th:text="${order.items.size()-3}"></span> more
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div style="font-size:15px;font-weight:600;color:var(--forest);" th:text="'Total: ₹' + ${order.totalAmount}"></div>
+          <a th:href="@{/account/orders/{n}(n=${order.orderNumber})}" class="btn-forest" style="font-size:13px;padding:10px 20px;">
+            View Details
+          </a>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" th:if="${orders.totalPages > 1}">
+        <a th:if="${orders.hasPrevious()}" th:href="@{/account/orders(page=${orders.number-1})}" class="page-btn">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+        <a th:each="i : ${#numbers.sequence(0,orders.totalPages-1)}"
+           th:href="@{/account/orders(page=${i})}"
+           class="page-btn" th:classappend="${i==orders.number}?'active'" th:text="${i+1}"></a>
+        <a th:if="${orders.hasNext()}" th:href="@{/account/orders(page=${orders.number+1})}" class="page-btn">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top:60px;">
+  <div class="footer-bottom" style="max-width:1400px;margin:0 auto;border-top:none;padding-top:0;">
+    <p>© 2026 Sarvasva Naturals</p>
+  </div>
+</footer>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

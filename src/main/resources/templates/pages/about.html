@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>About Us | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .about-hero{background:linear-gradient(135deg,#1a2e0f,#243b16);padding:80px 24px;text-align:center;position:relative;overflow:hidden;}
+    .about-hero::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=1400&q=30')center/cover;opacity:0.1;}
+    .mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin:64px 0;}
+    .value-card{background:#f5f0e8;border-radius:16px;padding:32px;transition:all 0.2s;}
+    .value-card:hover{background:#fff;box-shadow:0 8px 28px rgba(26,46,15,0.1);transform:translateY(-4px);}
+    .value-icon{font-size:32px;margin-bottom:14px;}
+    .values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:48px;}
+    .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:48px;}
+    .team-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(26,46,15,0.07);text-align:center;}
+    .team-card img{width:100%;height:240px;object-fit:cover;filter:grayscale(20%);}
+    .team-card-body{padding:20px;}
+    .timeline{border-left:2px solid #d4a853;padding-left:32px;margin-top:32px;}
+    .timeline-item{margin-bottom:32px;position:relative;}
+    .timeline-item::before{content:'';position:absolute;left:-40px;top:4px;width:14px;height:14px;background:#d4a853;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #d4a853;}
+    .timeline-year{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5a7a3a;font-weight:600;margin-bottom:6px;}
+    .timeline-title{font-family:'Playfair Display',serif;font-size:18px;color:#1a2e0f;margin-bottom:6px;}
+    .timeline-desc{font-size:14px;color:#666;line-height:1.6;}
+    @media(max-width:768px){.mission-grid{grid-template-columns:1fr;gap:32px;}}
+  </style>
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp; Zero Toxins &nbsp;·&nbsp; Farm Direct &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/shop">Shop All</a></li>
+      <li><a href="/our-process">Our Process</a></li>
+      <li><a href="/lab-reports">Lab Reports</a></li>
+      <li><a href="/about" class="active">About Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" id="searchToggle"><i class="fas fa-search"></i></button>
+      <a href="/login" style="display:flex;align-items:center;gap:7px;padding:8px 18px;border:1.5px solid #1a2e0f;border-radius:6px;font-size:13px;font-weight:600;color:#1a2e0f;">
+        <i class="fas fa-user"></i> Login
+      </a>
+      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount > 0}?'display:flex':'display:none'"></span>
+      </a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="about-hero">
+  <div style="position:relative;z-index:2;">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8aab6a;margin-bottom:12px;">Our Story</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,56px);color:#fff;margin-bottom:16px;">
+      Closing the <em style="color:#d4a853;font-style:italic;">Purity Gap</em><br>in Indian Spices.
+    </h1>
+    <p style="color:rgba(255,255,255,0.65);max-width:560px;margin:0 auto;font-size:16px;line-height:1.75;">
+      Sarvasva Naturals was born from a singular, unsettling realisation: the very spices meant to heal were being compromised by industrial shortcuts.
+    </p>
+  </div>
+</div>
+
+<div style="max-width:1100px;margin:0 auto;padding:64px 24px;">
+
+  <!-- Mission -->
+  <div class="mission-grid">
+    <div>
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5a7a3a;margin-bottom:10px;">The Genesis</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:36px;color:#1a2e0f;margin-bottom:20px;line-height:1.2;">We bridge the gap between traditional heritage and clinical rigour.</h2>
+      <p style="color:#555;font-size:15px;line-height:1.8;margin-bottom:20px;">Founded to restore the sacred bond between the farm and the kitchen, we've replaced ambiguity with empirical evidence. Every jar carries not just spices — but a promise backed by science.</p>
+      <div style="padding:20px 24px;border-left:3px solid #d4a853;background:#faf8f4;border-radius:0 8px 8px 0;">
+        <p style="font-family:'Playfair Display',serif;font-size:17px;color:#333;font-style:italic;">"Our mission isn't just organic; it's clinical transparency."</p>
+      </div>
+    </div>
+    <div>
+      <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=600&q=80"
+           style="width:100%;border-radius:16px;box-shadow:0 12px 40px rgba(26,46,15,0.15);" alt="Spices">
+    </div>
+  </div>
+
+  <!-- Values -->
+  <div style="margin-top:64px;">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5a7a3a;margin-bottom:8px;">What We Stand For</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:34px;color:#1a2e0f;">Our Core <em style="font-style:italic;color:#8b6914;">Values</em></h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card"><div class="value-icon">🌿</div><h3 style="font-family:'Playfair Display',serif;font-size:18px;color:#1a2e0f;margin-bottom:8px;">Farm Direct</h3><p style="font-size:14px;color:#666;line-height:1.6;">We partner directly with organic heritage farms. No middlemen. Fair prices for farmers, pure products for you.</p></div>
+      <div class="value-card"><div class="value-icon">🔬</div><h3 style="font-family:'Playfair Display',serif;font-size:18px;color:#1a2e0f;margin-bottom:8px;">Science Backed</h3><p style="font-size:14px;color:#666;line-height:1.6;">Every claim we make is backed by independent laboratory data. We don't just say pure — we prove it.</p></div>
+      <div class="value-card"><div class="value-icon">🤝</div><h3 style="font-family:'Playfair Display',serif;font-size:18px;color:#1a2e0f;margin-bottom:8px;">Fair Trade</h3><p style="font-size:14px;color:#666;line-height:1.6;">We ensure regenerative soil practices and fair-trade pricing for every farmer in our supply chain.</p></div>
+      <div class="value-card"><div class="value-icon">♻️</div><h3 style="font-family:'Playfair Display',serif;font-size:18px;color:#1a2e0f;margin-bottom:8px;">Sustainable</h3><p style="font-size:14px;color:#666;line-height:1.6;">Glass packaging. Minimal plastic. Carbon-conscious shipping. We take our environmental responsibility seriously.</p></div>
+    </div>
+  </div>
+
+  <!-- Journey Timeline -->
+  <div style="margin-top:72px;">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5a7a3a;margin-bottom:8px;">Our Journey</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:34px;color:#1a2e0f;margin-bottom:32px;">How We Got Here</h2>
+    <div class="timeline">
+      <div class="timeline-item"><div class="timeline-year">2022</div><div class="timeline-title">The Realisation</div><div class="timeline-desc">Our founder discovered that most commercial turmeric contains less than 2% curcumin — far below therapeutic levels. The idea for Sarvasva Naturals was born.</div></div>
+      <div class="timeline-item"><div class="timeline-year">2023</div><div class="timeline-title">Building the Supply Chain</div><div class="timeline-desc">We visited 40+ farms across Maharashtra, Rajasthan, Kerala and Meghalaya. Partnered with 8 heritage farms committed to regenerative practices.</div></div>
+      <div class="timeline-item"><div class="timeline-year">2024</div><div class="timeline-title">Lab Certification</div><div class="timeline-desc">Established partnerships with three ISO-certified independent laboratories for HPLC, ICP-MS and microbial testing on every batch.</div></div>
+      <div class="timeline-item"><div class="timeline-year">2025</div><div class="timeline-title">Launch</div><div class="timeline-desc">Sarvasva Naturals launched publicly. First batch of Rajapuri Curcumin Turmeric sold out in 72 hours. The purity movement began.</div></div>
+      <div class="timeline-item"><div class="timeline-year">2026</div><div class="timeline-title">Growing Strong</div><div class="timeline-desc">Expanding our catalogue with 8 lab-verified products. Trusted by doctors, nutritionists and thousands of health-conscious families across India.</div></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="background:#1a2e0f;border-radius:20px;padding:48px;text-align:center;margin-top:64px;">
+    <h2 style="font-family:'Playfair Display',serif;font-size:32px;color:#fff;margin-bottom:12px;">Ready to Experience the Difference?</h2>
+    <p style="color:rgba(255,255,255,0.65);margin-bottom:28px;font-size:15px;">Join thousands of customers who've switched to science-backed spices.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <a href="/shop" style="display:inline-flex;align-items:center;gap:8px;padding:14px 30px;background:#d4a853;color:#1a2e0f;border-radius:8px;font-weight:700;font-size:14px;"><i class="fas fa-shopping-bag"></i> Shop Now</a>
+      <a href="/our-process" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border:1.5px solid rgba(255,255,255,0.3);color:#fff;border-radius:8px;font-size:14px;"><i class="fas fa-flask"></i> Our Process</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand"><div class="footer-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:60px;width:auto;"></div><p>Purity without compromise.</p></div>
+    <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="/shop">Shop All</a></li><li><a href="/our-process">Our Process</a></li><li><a href="/lab-reports">Lab Reports</a></li><li><a href="/about">About Us</a></li></ul></div>
+    <div class="footer-links"><h4>Legal</h4><ul><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="#">Terms</a></li></ul></div>
+    <div class="footer-links"><h4>Connect</h4><ul><li>Yogesh.saarth@gmail.com</li><li>+91 98687 26202</li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Sarvasva Naturals. Purity in Every Grain.</p></div>
+</footer>
+<script src="/js/main.js" defer></script>
+</body>
+</html>

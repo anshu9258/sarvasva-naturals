@@ -1,0 +1,15 @@
+target/
+bin/
+
+.settings/
+.project
+.classpath
+
+.idea/
+.vscode/
+
+*.log
+
+.env
+
+application-local.properties

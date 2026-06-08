@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Lab Reports | Sarvasva Naturals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .lab-hero{background:linear-gradient(135deg,#1a2e0f,#243b16);padding:80px 24px;text-align:center;position:relative;overflow:hidden;}
+    .lab-hero::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=1400&q=30')center/cover;opacity:0.07;}
+    .lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:48px;}
+    .lab-card{background:#fff;border-radius:16px;padding:32px;box-shadow:0 4px 20px rgba(26,46,15,0.08);border:1.5px solid #e8e2d8;transition:all 0.2s;}
+    .lab-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(26,46,15,0.12);}
+    .lab-icon{width:56px;height:56px;background:#f5f0e8;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#1a2e0f;margin-bottom:20px;}
+    .lab-card h3{font-family:'Playfair Display',serif;font-size:19px;color:#1a2e0f;margin-bottom:10px;}
+    .lab-card p{font-size:14px;color:#666;line-height:1.7;margin-bottom:16px;}
+    .lab-card .value{font-size:28px;font-weight:700;color:#1a2e0f;font-family:'Playfair Display',serif;}
+    .lab-card .value-label{font-size:12px;color:#5a7a3a;margin-top:2px;}
+    .test-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(26,46,15,0.06);}
+    .test-table th{background:#1a2e0f;color:#d4a853;padding:14px 20px;text-align:left;font-size:12px;letter-spacing:1px;text-transform:uppercase;}
+    .test-table td{padding:14px 20px;border-bottom:1px solid #f0ebe3;font-size:14px;}
+    .test-table tr:last-child td{border-bottom:none;}
+    .test-table tr:hover td{background:#faf8f4;}
+    .pass-badge{background:#e8f5e9;color:#1b5e20;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+    .coa-section{background:#f5f0e8;border-radius:16px;padding:40px;text-align:center;margin-top:48px;}
+  </style>
+  <style>html{scroll-padding-top:110px;scroll-behavior:smooth;}</style>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+</head>
+<body class="page-loaded">
+<div class="announcement-bar"><div class="marquee"><span>🌿 Every batch independently tested &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp; Zero Toxins &nbsp;·&nbsp;</span></div></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/shop">Shop All</a></li>
+      <li><a href="/our-process">Our Process</a></li>
+      <li><a href="/lab-reports" class="active">Lab Reports</a></li>
+      <li><a href="/about">About Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" id="searchToggle"><i class="fas fa-search"></i></button>
+      <a href="/login" class="nav-login-btn" style="display:flex;align-items:center;gap:7px;padding:8px 18px;border:1.5px solid #1a2e0f;border-radius:6px;font-size:13px;font-weight:600;color:#1a2e0f;transition:all 0.2s;">
+        <i class="fas fa-user"></i> Login
+      </a>
+      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount > 0}?'display:flex':'display:none'"></span>
+      </a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="lab-hero">
+  <div style="position:relative;z-index:2;">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8aab6a;margin-bottom:12px;">Transparency First</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,56px);color:#fff;margin-bottom:16px;">
+      Lab Reports & <em style="color:#d4a853;font-style:italic;">Testing Data</em>
+    </h1>
+    <p style="color:rgba(255,255,255,0.65);max-width:520px;margin:0 auto 32px;font-size:16px;line-height:1.7;">
+      Every batch we sell is independently tested by ISO-certified laboratories. Here's the proof.
+    </p>
+    <a href="/verify-purity" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#d4a853;color:#1a2e0f;border-radius:8px;font-weight:700;font-size:14px;">
+      <i class="fas fa-search"></i> Verify Your Batch Code
+    </a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div style="max-width:1200px;margin:0 auto;padding:64px 24px;">
+  <div style="text-align:center;margin-bottom:48px;">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5a7a3a;margin-bottom:8px;">Our Numbers</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:36px;color:#1a2e0f;">What the Science Says</h2>
+  </div>
+  <div class="lab-grid">
+    <div class="lab-card">
+      <div class="lab-icon"><i class="fas fa-flask"></i></div>
+      <h3>Curcumin Content</h3>
+      <p>Our Rajapuri turmeric is HPLC-tested for curcuminoid concentration — the bioactive compound responsible for therapeutic effects.</p>
+      <div class="value">9.5%</div>
+      <div class="value-label">avg. curcumin content (market avg: 2–3%)</div>
+    </div>
+    <div class="lab-card">
+      <div class="lab-icon"><i class="fas fa-atom"></i></div>
+      <h3>Heavy Metal Testing</h3>
+      <p>ICP-MS testing for Lead, Arsenic, Cadmium and Mercury. Every batch must pass FSSAI and international food safety limits.</p>
+      <div class="value">ND</div>
+      <div class="value-label">None Detected — all batches clear</div>
+    </div>
+    <div class="lab-card">
+      <div class="lab-icon"><i class="fas fa-microscope"></i></div>
+      <h3>Microbial Purity</h3>
+      <p>PCR molecular diagnostics for Salmonella, E. Coli, Yeast and Mold. Strict limits enforced on every single batch.</p>
+      <div class="value">100%</div>
+      <div class="value-label">pass rate across all batches</div>
+    </div>
+    <div class="lab-card">
+      <div class="lab-icon"><i class="fas fa-tint"></i></div>
+      <h3>Moisture Content</h3>
+      <p>Controlled moisture prevents clumping, mold growth and degradation of volatile essential oils during storage.</p>
+      <div class="value">&lt;8%</div>
+      <div class="value-label">moisture content — industry best practice</div>
+    </div>
+    <div class="lab-card">
+      <div class="lab-icon"><i class="fas fa-pepper-hot"></i></div>
+      <h3>Piperine (Black Pepper)</h3>
+      <p>Piperine is the bioactive alkaloid in black pepper responsible for its sharp flavour and absorption-enhancing properties.</p>
+      <div class="value">5.8%</div>
+      <div class="value-label">piperine content — Malabar Grade</div>
+    </div>
+    <div class="lab-card">
+      <div class="lab-icon"><i class="fas fa-certificate"></i></div>
+      <h3>FSSAI Compliance</h3>
+      <p>All products are tested and certified compliant with FSSAI (Food Safety and Standards Authority of India) regulations.</p>
+      <div class="value">✓</div>
+      <div class="value-label">fully FSSAI compliant — every product</div>
+    </div>
+  </div>
+
+  <!-- Sample test table -->
+  <div style="margin-top:64px;">
+    <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:#1a2e0f;margin-bottom:8px;">Sample Batch Test Results</h2>
+    <p style="color:#666;margin-bottom:28px;">Batch SN-2024-001 · Organic Rajapuri Curcumin Turmeric · Maharashtra, India</p>
+    <div style="overflow-x:auto;">
+      <table class="test-table">
+        <thead>
+          <tr><th>Test Parameter</th><th>Method</th><th>Result</th><th>Limit</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Curcumin Content</td><td>HPLC</td><td>9.5%</td><td>Min 2%</td><td><span class="pass-badge">✓ PASS</span></td></tr>
+          <tr><td>Lead (Pb)</td><td>ICP-MS</td><td>0.02 ppm</td><td>Max 0.1 ppm</td><td><span class="pass-badge">✓ PASS</span></td></tr>
+          <tr><td>Arsenic (As)</td><td>ICP-MS</td><td>0.01 ppm</td><td>Max 0.1 ppm</td><td><span class="pass-badge">✓ PASS</span></td></tr>
+          <tr><td>Cadmium (Cd)</td><td>ICP-MS</td><td>ND</td><td>Max 0.05 ppm</td><td><span class="pass-badge">✓ PASS</span></td></tr>
+          <tr><td>Salmonella</td><td>PCR</td><td>Not Detected</td><td>Absent/25g</td><td><span class="pass-badge">✓ PASS</span></td></tr>
+          <tr><td>E. Coli</td><td>PCR</td><td>Not Detected</td><td>Absent/1g</td><td><span class="pass-badge">✓ PASS</span></td></tr>
+          <tr><td>Total Plate Count</td><td>ISO 4833</td><td>1200 cfu/g</td><td>Max 100000</td><td><span class="pass-badge">✓ PASS</span></td></tr>
+          <tr><td>Moisture Content</td><td>Karl Fischer</td><td>6.8%</td><td>Max 12%</td><td><span class="pass-badge">✓ PASS</span></td></tr>
+          <tr><td>Artificial Colour</td><td>TLC</td><td>Absent</td><td>Absent</td><td><span class="pass-badge">✓ PASS</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- COA Download -->
+  <div class="coa-section">
+    <div style="font-size:40px;margin-bottom:16px;">📄</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:#1a2e0f;margin-bottom:10px;">Download Certificate of Analysis</h2>
+    <p style="color:#666;max-width:480px;margin:0 auto 28px;font-size:15px;line-height:1.7;">We provide a full COA (Certificate of Analysis) for every product we sell. Enter your batch code or download a sample.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <a href="/verify-purity" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#1a2e0f;color:#fff;border-radius:8px;font-weight:600;font-size:14px;">
+        <i class="fas fa-search"></i> Verify Batch
+      </a>
+      <a href="/shop" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border:1.5px solid #1a2e0f;color:#1a2e0f;border-radius:8px;font-weight:600;font-size:14px;">
+        <i class="fas fa-shopping-bag"></i> Shop Products
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand"><div class="footer-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:60px;width:auto;"></div><p>Purity without compromise.</p></div>
+    <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="/shop">Shop All</a></li><li><a href="/our-process">Our Process</a></li><li><a href="/lab-reports">Lab Reports</a></li></ul></div>
+    <div class="footer-links"><h4>Legal</h4><ul><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="#">Terms</a></li><li><a href="#">Returns</a></li></ul></div>
+    <div class="footer-links"><h4>Connect</h4><ul><li>Yogesh.saarth@gmail.com</li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Sarvasva Naturals. Purity in Every Grain.</p></div>
+</footer>
+<script src="/js/main.js" defer></script>
+</body>
+</html>
