@@ -37,23 +37,7 @@
 </head>
 <body class="page-loaded">
 <div class="announcement-bar"><div class="marquee"><span>🌿 HPLC Verified &nbsp;·&nbsp; Zero Toxins &nbsp;·&nbsp; Farm Direct &nbsp;·&nbsp;</span></div></div>
-<nav class="navbar" id="navbar">
-  <div class="nav-container">
-    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="/shop">Shop All</a></li>
-      <li><a href="/our-process" class="active">Our Process</a></li>
-      <li><a href="/lab-reports">Lab Reports</a></li>
-      <li><a href="/about">About Us</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i>
-        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount>0}?'display:flex':'display:none'"></span>
-      </a>
-      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</nav>
+<div th:replace="~{fragments/layout :: header(activePage='process')}"></div>
 
 <!-- Hero -->
 <div style="background:linear-gradient(135deg,var(--forest) 0%,#243b16 100%);padding:80px 24px;text-align:center;position:relative;overflow:hidden;">
