@@ -13,22 +13,7 @@
 </head>
 <body class="page-loaded">
 <div class="announcement-bar"><div class="marquee"><span>🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp;</span></div></div>
-<nav class="navbar" id="navbar">
-  <div class="nav-container">
-    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="/shop">Shop All</a></li>
-      <li><a href="/our-process">Our Process</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a href="/cart" class="cart-btn">
-        <i class="fas fa-shopping-bag"></i>
-        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount>0}?'display:flex':'display:none'"></span>
-      </a>
-      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</nav>
+<div th:replace="~{fragments/layout :: header(activePage='cart')}"></div>
 
 <div style="max-width:1400px;margin:0 auto;padding:24px 24px 8px;">
   <div class="breadcrumb"><a href="/">Home</a><span class="sep">/</span><span>Cart</span></div>
