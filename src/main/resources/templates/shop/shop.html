@@ -15,32 +15,7 @@
 <body class="page-loaded">
 <!-- Reuse nav snippet -->
 <div class="announcement-bar"><div class="marquee"><span>🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp; Zero Toxins &nbsp;·&nbsp; Farm Direct &nbsp;·&nbsp; 🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp;</span></div></div>
-<nav class="navbar" id="navbar">
-  <div class="nav-container">
-    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="/shop" class="active">Shop All</a></li>
-      <li><a href="/our-process">Our Process</a></li>
-      <li><a href="/lab-reports">Lab Reports</a></li>
-      <li><a href="/about">About Us</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="nav-icon-btn" id="searchToggle"><i class="fas fa-search"></i></button>
-      <a href="/cart" class="cart-btn">
-        <i class="fas fa-shopping-bag"></i>
-        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount > 0} ? 'display:flex' : 'display:none'">0</span>
-      </a>
-      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-  <div class="search-bar" id="searchBar">
-    <form action="/search" method="get" class="search-form">
-      <input type="text" name="q" placeholder="Search spices...">
-      <button type="submit"><i class="fas fa-search"></i></button>
-    </form>
-    <button class="search-close" id="searchClose"><i class="fas fa-times"></i></button>
-  </div>
-</nav>
+<div th:replace="~{fragments/layout :: header(activePage='shop')}"></div>
 
 <!-- Page Header -->
 <div style="background:linear-gradient(135deg,#f5f0e8,#ede6d8);padding:48px 24px;text-align:center;">
