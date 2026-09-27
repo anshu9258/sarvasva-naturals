@@ -13,20 +13,7 @@
 </head>
 <body class="page-loaded">
 <div class="announcement-bar"><div class="marquee"><span>🌿 Every batch has a unique digital certificate &nbsp;·&nbsp; 100% Transparency &nbsp;·&nbsp;</span></div></div>
-<nav class="navbar" id="navbar">
-  <div class="nav-container">
-    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="/shop">Shop All</a></li>
-      <li><a href="/our-process">Our Process</a></li>
-      <li><a href="/lab-reports">Lab Reports</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i></a>
-      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</nav>
+<div th:replace="~{fragments/layout :: header(activePage='verify')}"></div>
 
 <!-- Hero -->
 <div style="background:linear-gradient(135deg,var(--forest),#243b16);padding:80px 24px;text-align:center;position:relative;overflow:hidden;">
