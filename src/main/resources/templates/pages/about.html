@@ -33,27 +33,7 @@
 </head>
 <body class="page-loaded">
 <div class="announcement-bar"><div class="marquee"><span>🌿 Free shipping above ₹999 &nbsp;·&nbsp; HPLC Verified &nbsp;·&nbsp; Zero Toxins &nbsp;·&nbsp; Farm Direct &nbsp;·&nbsp;</span></div></div>
-<nav class="navbar" id="navbar">
-  <div class="nav-container">
-    <a href="/" class="nav-logo"><img src="/images/logo-web.png" alt="Sarvasva Naturals" style="height:44px;width:auto;object-fit:contain;"></a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="/shop">Shop All</a></li>
-      <li><a href="/our-process">Our Process</a></li>
-      <li><a href="/lab-reports">Lab Reports</a></li>
-      <li><a href="/about" class="active">About Us</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="nav-icon-btn" id="searchToggle"><i class="fas fa-search"></i></button>
-      <a href="/login" style="display:flex;align-items:center;gap:7px;padding:8px 18px;border:1.5px solid #1a2e0f;border-radius:6px;font-size:13px;font-weight:600;color:#1a2e0f;">
-        <i class="fas fa-user"></i> Login
-      </a>
-      <a href="/cart" class="cart-btn"><i class="fas fa-shopping-bag"></i>
-        <span class="cart-count" id="cartCount" th:text="${cartCount}" th:style="${cartCount > 0}?'display:flex':'display:none'"></span>
-      </a>
-      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</nav>
+<div th:replace="~{fragments/layout :: header(activePage='about')}"></div>
 
 <!-- Hero -->
 <div class="about-hero">
