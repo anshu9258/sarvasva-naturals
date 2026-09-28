@@ -3,6 +3,7 @@ package com.sarvasvanaturals.service;
 import com.sarvasvanaturals.model.*;
 import com.sarvasvanaturals.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -142,7 +143,12 @@ public class OrderService {
     }
 
     public Optional<Order> getOrderByNumber(String orderNumber) {
-        return orderRepository.findByOrderNumber(orderNumber);
+        // open-in-view is disabled, so load the lazy items here (inside the transaction)
+        // so the success / order-detail pages can render them.
+        return orderRepository.findByOrderNumber(orderNumber).map(order -> {
+            Hibernate.initialize(order.getItems());
+            return order;
+        });
     }
 
     public Order updateStatus(Long orderId, Order.OrderStatus status) {
