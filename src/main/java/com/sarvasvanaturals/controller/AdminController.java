@@ -133,8 +133,7 @@ public class AdminController {
     public String orders(@RequestParam(defaultValue = "0") int page,
                           @RequestParam(required = false) String status,
                           Model model) {
-        Page<Order> orders = orderRepository.findAll(
-                PageRequest.of(page, 20, Sort.by("createdAt").descending()));
+        Page<Order> orders = orderService.getAllOrders(page);
         model.addAttribute("orders", orders);
         model.addAttribute("statuses", Order.OrderStatus.values());
         model.addAttribute("currentStatus", status);
@@ -143,7 +142,7 @@ public class AdminController {
 
     @GetMapping("/orders/{id}")
     public String orderDetail(@PathVariable Long id, Model model) {
-        Order order = orderRepository.findById(id)
+        Order order = orderService.getOrderById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         model.addAttribute("order", order);
         model.addAttribute("statuses", Order.OrderStatus.values());
