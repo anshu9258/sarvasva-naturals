@@ -879,7 +879,6 @@
   .shop-sidebar { display: none; }
   .account-layout { grid-template-columns: 1fr; }
   .admin-layout { grid-template-columns: 1fr; }
-  .admin-sidebar { display: none; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .advisory-grid { grid-template-columns: 1fr; }
   .cart-table-head, .cart-item-row {
