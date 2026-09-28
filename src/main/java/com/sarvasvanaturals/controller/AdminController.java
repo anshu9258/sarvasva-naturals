@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -86,20 +87,34 @@ public class AdminController {
     @PostMapping("/products/save")
     public String saveProduct(@ModelAttribute Product product,
                                @RequestParam Long categoryId,
-                               @RequestParam(required = false) String imageUrl,
+                               @RequestParam(required = false) String imageUrls,
                                RedirectAttributes redirectAttributes) {
         try {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             product.setCategory(category);
 
-            if (imageUrl != null && !imageUrl.isBlank()) {
-                ProductImage img = ProductImage.builder()
-                        .imageUrl(imageUrl)
-                        .mainImage(true)
-                        .product(product)
-                        .build();
-                product.getImages().add(img);
+            // One image URL per line; the first one is the main image
+            List<String> urls = imageUrls == null ? List.of()
+                    : Arrays.stream(imageUrls.split("\\r?\\n"))
+                            .map(String::trim)
+                            .filter(u -> !u.isEmpty())
+                            .distinct()
+                            .toList();
+
+            if (!urls.isEmpty()) {
+                for (int i = 0; i < urls.size(); i++) {
+                    product.getImages().add(ProductImage.builder()
+                            .imageUrl(urls.get(i))
+                            .mainImage(i == 0)
+                            .displayOrder(i)
+                            .product(product)
+                            .build());
+                }
+            } else if (product.getId() != null) {
+                // No URLs submitted on edit: keep the images the product already has
+                productRepository.findById(product.getId())
+                        .ifPresent(existing -> product.getImages().addAll(existing.getImages()));
             }
 
             productService.save(product);
