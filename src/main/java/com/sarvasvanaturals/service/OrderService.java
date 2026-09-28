@@ -7,6 +7,7 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -144,6 +145,27 @@ public class OrderService {
         // so the My Orders / dashboard pages can render them.
         orders.getContent().forEach(order -> Hibernate.initialize(order.getItems()));
         return orders;
+    }
+
+    // Admin: all orders (paged). Items and customer are loaded here, inside the transaction,
+    // because open-in-view is disabled and the admin pages read them while rendering.
+    public Page<Order> getAllOrders(int page) {
+        Page<Order> orders = orderRepository.findAll(
+                PageRequest.of(page, 20, Sort.by("createdAt").descending()));
+        orders.getContent().forEach(order -> {
+            Hibernate.initialize(order.getItems());
+            Hibernate.initialize(order.getUser());
+        });
+        return orders;
+    }
+
+    // Admin: single order by id, with items and customer loaded.
+    public Optional<Order> getOrderById(Long id) {
+        return orderRepository.findById(id).map(order -> {
+            Hibernate.initialize(order.getItems());
+            Hibernate.initialize(order.getUser());
+            return order;
+        });
     }
 
     public Optional<Order> getOrderByNumber(String orderNumber) {
