@@ -139,7 +139,11 @@ public class OrderService {
     }
 
     public Page<Order> getUserOrders(User user, int page) {
-        return orderRepository.findByUserOrderByCreatedAtDesc(user, PageRequest.of(page, 10));
+        Page<Order> orders = orderRepository.findByUserOrderByCreatedAtDesc(user, PageRequest.of(page, 10));
+        // open-in-view is disabled, so load the lazy items here (inside the transaction)
+        // so the My Orders / dashboard pages can render them.
+        orders.getContent().forEach(order -> Hibernate.initialize(order.getItems()));
+        return orders;
     }
 
     public Optional<Order> getOrderByNumber(String orderNumber) {
