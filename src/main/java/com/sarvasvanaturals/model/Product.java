@@ -76,7 +76,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
     private List<ProductImage> images = new ArrayList<>();
 
@@ -108,6 +108,13 @@ public class Product {
                 .findFirst()
                 .map(ProductImage::getImageUrl)
                 .orElse(images.isEmpty() ? "/images/placeholder.jpg" : images.get(0).getImageUrl());
+    }
+
+    // All image URLs, one per line (used by the admin product form)
+    public String getImageUrlsText() {
+        return images.stream()
+                .map(ProductImage::getImageUrl)
+                .collect(java.util.stream.Collectors.joining("\n"));
     }
 
     public boolean isOnSale() {
