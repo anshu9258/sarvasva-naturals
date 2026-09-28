@@ -33,6 +33,10 @@ public class CartService {
     public Cart addToCart(Cart cart, Long productId, int quantity, String selectedWeight) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+                if (!product.isActive()) {
+            throw new RuntimeException("Product is no longer available");
+        }
+        
 
         if (product.getStockQuantity() < quantity) {
             throw new RuntimeException("Insufficient stock");
