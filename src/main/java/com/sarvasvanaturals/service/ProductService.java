@@ -38,7 +38,7 @@ public class ProductService {
     }
 
     public Optional<Product> getProductBySlug(String slug) {
-        return productRepository.findBySlug(slug);
+        return productRepository.findBySlug(slug).filter(Product::isActive);
     }
 
     public Page<Product> getFeaturedProducts(int page, int size) {
@@ -65,9 +65,14 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    @Transactional
+       @Transactional
     public void deleteById(Long id) {
-        productRepository.deleteById(id);
+        // Soft delete: hide the product instead of removing the row, so past
+        // orders, carts and reviews that reference it keep working.
+        productRepository.findById(id).ifPresent(p -> {
+            p.setActive(false);
+            productRepository.save(p);
+        });
     }
 
     private Sort resolveSort(String sort) {
