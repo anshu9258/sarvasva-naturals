@@ -14,9 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ public class AdminController {
     private final ReviewRepository reviewRepository;
     private final CouponRepository couponRepository;
     private final UserService userService;
+    private final CloudinaryService cloudinaryService;
 
     // =================== DASHBOARD ===================
 
@@ -82,6 +85,25 @@ public class AdminController {
         model.addAttribute("product", product);
         model.addAttribute("categories", categoryRepository.findAll());
         return "admin/product-form";
+    }
+
+    // Uploads product images to Cloudinary and returns their URLs (used by the product form)
+    @PostMapping("/products/upload-images")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> uploadProductImages(@RequestParam("files") List<MultipartFile> files) {
+        try {
+            List<String> urls = new ArrayList<>();
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    urls.add(cloudinaryService.uploadProductImage(file));
+                }
+            }
+            Map<String, Object> body = Map.of("urls", urls);
+            return ResponseEntity.ok(body);
+        } catch (Exception e) {
+            Map<String, Object> body = Map.of("error", e.getMessage() != null ? e.getMessage() : "Upload failed");
+            return ResponseEntity.badRequest().body(body);
+        }
     }
 
     @PostMapping("/products/save")
