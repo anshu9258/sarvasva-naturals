@@ -139,6 +139,11 @@
                       placeholder="https://.../image-1.jpg&#10;https://.../image-2.jpg"
                       oninput="previewImages(this.value)"></textarea>
           </div>
+          <div class="form-group">
+            <label class="form-label">Or upload from your computer</label>
+            <input type="file" id="imageFiles" class="form-control" accept="image/*" multiple onchange="uploadImages(this)">
+            <div id="uploadStatus" style="font-size:13px;color:var(--text-muted);margin-top:6px;"></div>
+          </div>
           <div id="imagePreview" style="margin-top:12px;border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:var(--warm);display:flex;align-items:center;justify-content:center;">
             <img th:if="${not #lists.isEmpty(product.images)}"
                  th:src="${product.images[0].imageUrl}" style="width:100%;height:100%;object-fit:cover;"
@@ -205,6 +210,34 @@ function previewImages(text) {
     t.style.cssText = 'width:64px;height:64px;object-fit:cover;border-radius:8px;';
     thumbs.appendChild(t);
   });
+}
+async function uploadImages(input) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  const status = document.getElementById('uploadStatus');
+  status.textContent = 'Uploading ' + files.length + ' image(s)...';
+  const fd = new FormData();
+  files.forEach(f => fd.append('files', f));
+  const token = document.querySelector('input[name="_csrf"]').value;
+  try {
+    const res = await fetch('/admin/products/upload-images', {
+      method: 'POST',
+      headers: { 'X-CSRF-TOKEN': token },
+      body: fd
+    });
+    let data = {};
+    try { data = await res.json(); } catch (e) {}
+    if (!res.ok || !data.urls) {
+      throw new Error(data.error || 'Upload failed. Check the image size (max 10 MB each, 30 MB total) and try again.');
+    }
+    const ta = document.getElementById('imageUrlInput');
+    ta.value = (ta.value.trim() ? ta.value.trim() + '\n' : '') + data.urls.join('\n');
+    previewImages(ta.value);
+    status.textContent = data.urls.length + ' image(s) uploaded. Click Save Product to keep them.';
+  } catch (err) {
+    status.textContent = err.message;
+  }
+  input.value = '';
 }
 document.addEventListener('DOMContentLoaded', () => {
   const ta = document.getElementById('imageUrlInput');
