@@ -51,7 +51,7 @@
     </div>
     <div class="thumbnails" th:if="${product.images.size() > 1}">
       <div th:each="img, iter : ${product.images}" class="thumbnail" th:classappend="${iter.index==0}?'active'"
-           th:onclick="'switchImage(this,\'' + ${img.imageUrl} + '\')'">
+           th:data-src="${img.imageUrl}" onclick="switchImage(this, this.dataset.src)">
         <img th:src="${img.imageUrl}" th:alt="${product.name}">
       </div>
     </div>
